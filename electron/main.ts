@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import * as url from "url";
+import * as isDev from "electron-is-dev";
 
 let mainWindow: Electron.BrowserWindow | null;
 
@@ -14,9 +15,9 @@ function createWindow() {
     },
   });
 
-  if (process.env.NODE_ENV === "development") {
+  if (isDev) {
     mainWindow.loadURL(`http://localhost:4000`);
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadURL(
       url.format({
