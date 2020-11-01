@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import { Shell } from './pages/shell';
 
 const mainElement = document.createElement('div');
 document.body.appendChild(mainElement);
 
-const App = () => {
+export function App(): JSX.Element {
   return (
-    <h1>
-      Hello World!
-    </h1>
+    <Shell />
   )
 }
 
