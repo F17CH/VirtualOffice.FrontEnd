@@ -18,7 +18,7 @@ module.exports = {
           loader: "babel-loader",
         },
       },
-    ],
+    ]
   },
   devServer: {
     contentBase: path.join(__dirname, "../dist/renderer"),
@@ -32,5 +32,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "js/[name].js",
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [new HtmlWebpackPlugin({
+    template: "./src/index.ejs"
+  })],
 };
