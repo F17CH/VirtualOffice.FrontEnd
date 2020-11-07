@@ -9,10 +9,10 @@ document.body.appendChild(mainElement);
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#37474f"
+      main: "#bbdefb",
     },
     secondary: {
-      main: "#78909c"
+      main: "#304ffe"
     }
   }
 });

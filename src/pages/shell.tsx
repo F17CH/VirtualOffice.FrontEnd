@@ -1,15 +1,25 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core"
+import { TitleBar } from "./titlebar";
 
-const useStyles = makeStyles((theme) => ({
-    shellRoot: {
+type StyleProps = 
+{
+    titleBarHeightStyle: string;
+}
+const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
+    shellMain: {
         flexGrow: 1,
         margin: 0,
         minHeight: '100vh'
     },
+    shellBody: {
+        flexGrow: 1,
+        margin: 0,
+        minHeight: '100%'
+    },
     container: {
-        height: "100vh",
+        height: ({titleBarHeightStyle}) => `calc(100vh - ${titleBarHeightStyle})`,
     },
     sidePaper: {
         padding: theme.spacing(0),
@@ -21,27 +31,32 @@ const useStyles = makeStyles((theme) => ({
     mainPaper: {
         padding: theme.spacing(0),
         textAlign: 'center',
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
         height: "100%"
     },
-}));
+})));
 
 export function Shell(): JSX.Element {
-    const classes = useStyles();
+    const titleBarHeight:  string = '25px';  
+    const styleProps : StyleProps = {titleBarHeightStyle: titleBarHeight};
+    const classes = useStyles(styleProps);
 
     return (
-        <div className={classes.shellRoot}>
+        <div className={classes.shellMain}>
+            <TitleBar titleBarHeight={titleBarHeight} />
+            <div className={classes.shellBody}>
             <Grid container direction="row" className={classes.container} spacing={0}>
                 <Grid item className={classes.container} xs={6} lg={3}>
-                    <Paper className={classes.sidePaper} square >xs = 3</Paper>
+                    <Paper className={classes.sidePaper} square ></Paper>
                 </Grid>
                 <Grid item className={classes.container} xs={2} lg = {6}>
-                    <Paper className={classes.mainPaper} square>xs = 6</Paper>
+                    <Paper className={classes.mainPaper} square></Paper>
                 </Grid>
                 <Grid item className={classes.container} xs={6} lg={3}>
-                    <Paper className={classes.sidePaper} square>xs = 3</Paper>
+                    <Paper className={classes.sidePaper} square></Paper>
                 </Grid>
             </Grid>
+            </div>
         </div>
     )
 }   
