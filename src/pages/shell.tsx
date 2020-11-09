@@ -1,7 +1,7 @@
 import React from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core"
-import { TitleBar } from "./titlebar";
+import { TitleBar } from "../components/titlebar";
 
 type StyleProps = 
 {
