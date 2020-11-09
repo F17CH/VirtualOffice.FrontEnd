@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core";
-import close from "../../public/images/titlebar/close.svg";
-import max from "../../public/images/titlebar/max.svg";
-import min from "../../public/images/titlebar/min.svg";
+import SvgClose from "./icons/close";
+import SvgMax from "./icons/max";
+import SvgMin from "./icons/min";
 
 type StyleProps =
     {
@@ -31,22 +31,28 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
 
     },
     closeButton: {
+        stroke: "black"
     },
     closeButtonHover: {
         background: theme.palette.error.main,
+        stroke: "white",
         cursor: "pointer",
-        stroke: "#00FF00",
     },
     maxButton: {
-
+        stroke: "black"
     },
     maxButtonHover: {
-        background: theme.palette.error.main,
+        background: theme.palette.secondary.light,
+        stroke: "white",
         cursor: "pointer",
-        fill: "#00FF00",
     },
     minButton: {
-
+        stroke: "black"
+    },
+    minButtonHover: {
+        background: theme.palette.secondary.light,
+        stroke: "white",
+        cursor: "pointer",
     }
 })));
 
@@ -60,20 +66,24 @@ export function TitleBar({
     const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight };
     const classes = useStyles(styleProps);
 
+    const [closeHover, setCloseHover] = useState(false);
+    const [maxHover, setMaxHover] = useState(false);
+    const [minHover, setMinHover] = useState(false);
+
     return (
         <Grid container direction="row" className={classes.titleBarContainer} spacing={0}>
             <Grid item className={classes.titleBarContainer} xs={12} >
                 <Paper className={classes.titleBarMainPaper} square>
                     <Grid container direction="row-reverse" justify="flex-start">
-                        <img src={close}
-                            className={classes.closeButton}
-                            onMouseEnter={e => e.currentTarget.className = classes.closeButtonHover}
-                            onMouseLeave={e => e.currentTarget.className = classes.closeButton} />
-                        <img src={max}
-                            className={classes.closeButton}
-                            onMouseEnter={e => e.currentTarget.className = classes.maxButtonHover}
-                            onMouseLeave={e => e.currentTarget.className = classes.maxButton} />
-                        <img src={min} alt="" className={classes.minButton} />
+                        <SvgClose className={closeHover ? classes.closeButtonHover : classes.closeButton}
+                            onMouseEnter={() => setCloseHover(true)}
+                            onMouseLeave={() => setCloseHover(false)} />
+                        <SvgMax className={maxHover ? classes.maxButtonHover : classes.maxButton}
+                            onMouseEnter={() => setMaxHover(true)}
+                            onMouseLeave={() => setMaxHover(false)} />
+                        <SvgMin className={minHover ? classes.minButtonHover : classes.minButton}
+                            onMouseEnter={() => setMinHover(true)}
+                            onMouseLeave={() => setMinHover(false)} />
                         <Grid className={classes.titleBarHover} />
                     </Grid>
                 </Paper>
