@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import * as url from "url";
 import * as isDev from "electron-is-dev";
@@ -35,6 +35,30 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+ipcMain.on('windowstate-modification-request', (e, msg) => {
+  switch (msg) {
+    case 'minimize': {
+      mainWindow?.minimize();
+      break;
+    }
+    case 'maximize': {
+      if (mainWindow?.isMaximized()) {
+        mainWindow?.unmaximize();
+      } else {
+        mainWindow?.maximize();
+      }
+      break;
+      }
+      case 'close': {
+        mainWindow?.close();
+        break;
+      }
+      default: {
+        throw new Error('Unsupported window state change requested');
+      }
+    }
+});
 
 app.on("ready", createWindow);
 app.allowRendererProcessReuse = true;

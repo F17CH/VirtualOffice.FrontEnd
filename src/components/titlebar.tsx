@@ -4,6 +4,7 @@ import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core";
 import SvgClose from "./icons/close";
 import SvgMax from "./icons/max";
 import SvgMin from "./icons/min";
+import { ipcRenderer as ipc, remote} from 'electron';
 
 type StyleProps =
     {
@@ -70,6 +71,10 @@ export function TitleBar({
     const [maxHover, setMaxHover] = useState(false);
     const [minHover, setMinHover] = useState(false);
 
+    const mainWindowStateChangeRequest = (windowState : string) => {
+        ipc.send('windowstate-modification-request', windowState);
+    }
+
     return (
         <Grid container direction="row" className={classes.titleBarContainer} spacing={0}>
             <Grid item className={classes.titleBarContainer} xs={12} >
@@ -77,13 +82,16 @@ export function TitleBar({
                     <Grid container direction="row-reverse" justify="flex-start">
                         <SvgClose className={closeHover ? classes.closeButtonHover : classes.closeButton}
                             onMouseEnter={() => setCloseHover(true)}
-                            onMouseLeave={() => setCloseHover(false)} />
+                            onMouseLeave={() => setCloseHover(false)}
+                            onClick={() => mainWindowStateChangeRequest('close')} />
                         <SvgMax className={maxHover ? classes.maxButtonHover : classes.maxButton}
                             onMouseEnter={() => setMaxHover(true)}
-                            onMouseLeave={() => setMaxHover(false)} />
+                            onMouseLeave={() => setMaxHover(false)}
+                            onClick={() => mainWindowStateChangeRequest('maximize')} />
                         <SvgMin className={minHover ? classes.minButtonHover : classes.minButton}
                             onMouseEnter={() => setMinHover(true)}
-                            onMouseLeave={() => setMinHover(false)} />
+                            onMouseLeave={() => setMinHover(false)}
+                            onClick={() => mainWindowStateChangeRequest('minimize')} />
                         <Grid className={classes.titleBarHover} />
                     </Grid>
                 </Paper>
