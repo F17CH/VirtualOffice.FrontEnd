@@ -37,7 +37,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
 })));
 
 export function Shell(): JSX.Element {
-    const titleBarHeight:  string = '25px';  
+    const titleBarHeight:  string = '30px';  
     const styleProps : StyleProps = {titleBarHeightStyle: titleBarHeight};
     const classes = useStyles(styleProps);
 
@@ -46,13 +46,13 @@ export function Shell(): JSX.Element {
             <TitleBar titleBarHeight={titleBarHeight} />
             <div className={classes.shellBody}>
             <Grid container direction="row" className={classes.container} spacing={0}>
-                <Grid item className={classes.container} xs={6} lg={3}>
+                <Grid item className={classes.container} xs={3} lg={3}>
                     <Paper className={classes.sidePaper} square ></Paper>
                 </Grid>
-                <Grid item className={classes.container} xs={2} lg = {6}>
+                <Grid item className={classes.container} xs={6} lg = {6}>
                     <Paper className={classes.mainPaper} square></Paper>
                 </Grid>
-                <Grid item className={classes.container} xs={6} lg={3}>
+                <Grid item className={classes.container} xs={3} lg={3}>
                     <Paper className={classes.sidePaper} square></Paper>
                 </Grid>
             </Grid>

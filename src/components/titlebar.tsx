@@ -5,6 +5,7 @@ import SvgClose from "./icons/close";
 import SvgMax from "./icons/max";
 import SvgMin from "./icons/min";
 import { ipcRenderer as ipc, remote} from 'electron';
+import SvgLogo from "./icons/logo";
 
 type StyleProps =
     {
@@ -32,28 +33,34 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
 
     },
     closeButton: {
-        stroke: "black"
+        stroke: "black",
+        WebkitAppRegion: "none",
     },
     closeButtonHover: {
         background: theme.palette.error.main,
         stroke: "white",
         cursor: "pointer",
+        WebkitAppRegion: "none",
     },
     maxButton: {
-        stroke: "black"
+        stroke: "black",
+        WebkitAppRegion: "none",
     },
     maxButtonHover: {
         background: theme.palette.secondary.light,
         stroke: "white",
         cursor: "pointer",
+        WebkitAppRegion: "none",
     },
     minButton: {
-        stroke: "black"
+        stroke: "black",
+        WebkitAppRegion: "none",
     },
     minButtonHover: {
         background: theme.palette.secondary.light,
         stroke: "white",
         cursor: "pointer",
+        WebkitAppRegion: "none",
     }
 })));
 
@@ -79,20 +86,27 @@ export function TitleBar({
         <Grid container direction="row" className={classes.titleBarContainer} spacing={0}>
             <Grid item className={classes.titleBarContainer} xs={12} >
                 <Paper className={classes.titleBarMainPaper} square>
-                    <Grid container direction="row-reverse" justify="flex-start">
+                    <Grid container className={classes.titleBarHover}>
+                        <Grid container item xs={6} className={classes.titleBarContainer} direction="row" justify="flex-start">
+                            <SvgLogo height={titleBarHeight} />
+                        </Grid>
+                        <Grid container item xs={6} className={classes.titleBarContainer} direction="row-reverse" justify="flex-start">
                         <SvgClose className={closeHover ? classes.closeButtonHover : classes.closeButton}
+                            height = {titleBarHeight}
                             onMouseEnter={() => setCloseHover(true)}
                             onMouseLeave={() => setCloseHover(false)}
                             onClick={() => mainWindowStateChangeRequest('close')} />
                         <SvgMax className={maxHover ? classes.maxButtonHover : classes.maxButton}
+                            height={titleBarHeight}
                             onMouseEnter={() => setMaxHover(true)}
                             onMouseLeave={() => setMaxHover(false)}
                             onClick={() => mainWindowStateChangeRequest('maximize')} />
                         <SvgMin className={minHover ? classes.minButtonHover : classes.minButton}
+                            height={titleBarHeight}
                             onMouseEnter={() => setMinHover(true)}
                             onMouseLeave={() => setMinHover(false)}
                             onClick={() => mainWindowStateChangeRequest('minimize')} />
-                        <Grid className={classes.titleBarHover} />
+                        </Grid>
                     </Grid>
                 </Paper>
             </Grid>
