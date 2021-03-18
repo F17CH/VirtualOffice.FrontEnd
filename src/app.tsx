@@ -2,6 +2,8 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDom from 'react-dom';
 import { Shell } from './pages/shell';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 const mainElement = document.createElement('div');
 document.body.appendChild(mainElement);

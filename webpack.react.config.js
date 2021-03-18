@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const DotenvPlugin = require("dotenv-webpack")
 
 module.exports = {
   resolve: {
@@ -50,5 +51,5 @@ module.exports = {
   },
   plugins: [new HtmlWebpackPlugin({
     template: "./src/index.ejs"
-  })],
+  })]
 };

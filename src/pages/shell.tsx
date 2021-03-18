@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core"
 import { TitleBar } from "../components/titlebar";
+import { User } from "../types/user";
+import { LoginBox } from "../components/login_box";
 
 type StyleProps = 
 {
-    titleBarHeightStyle: string;
+    titleBarHeightStyle: string;  
 }
 const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     shellMain: {
@@ -41,10 +43,17 @@ export function Shell(): JSX.Element {
     const styleProps : StyleProps = {titleBarHeightStyle: titleBarHeight};
     const classes = useStyles(styleProps);
 
+    const [currentUser, setCurrentUser] = useState<User|null>(null);
+
+    function onLogin(user: User): void {
+        setCurrentUser(user);
+    }
+
     return (
         <div className={classes.shellMain}>
             <TitleBar titleBarHeight={titleBarHeight} />
             <div className={classes.shellBody}>
+                {currentUser != null ? (
             <Grid container direction="row" className={classes.container} spacing={0}>
                 <Grid item className={classes.container} xs={3} lg={3}>
                     <Paper className={classes.sidePaper} square ></Paper>
@@ -56,6 +65,9 @@ export function Shell(): JSX.Element {
                     <Paper className={classes.sidePaper} square></Paper>
                 </Grid>
             </Grid>
+                ) : (
+                    <LoginBox onLogin={onLogin} />
+                )}
             </div>
         </div>
     )
