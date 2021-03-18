@@ -7,33 +7,42 @@ import { postAttemptLogin } from "../api/login_api";
 
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
+    box: {
+        backgroundColor: theme.palette.secondary.main,
+        height: "600px",
+        width: "600px",
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center"
+    },
+    loginObject: {
+        height: "60px",
+        width: "60%",
+    }
 })));
 
 export type LoginBoxProps = {
-    onLogin: (user: User) => void;
+    loginCredentials: LoginCredentials;
+    onLoginCredentialsChange: (updates : Partial<LoginCredentials>) => void;
+    loginMessage: string;
+    attemptLogin: () => void;
 }
 
 export function LoginBox({
-    onLogin
+    loginCredentials,
+    onLoginCredentialsChange,
+    loginMessage,
+    attemptLogin
 }: LoginBoxProps): JSX.Element {
     const classes = useStyles();
-    const [loginCredentials, setLoginCredentials] = useState<LoginCredentials>({email : "", password: ""});
-    const [loginResponse, setLoginResponse] = useState<string>("no value");
-
-    function handleLoginCredentialsChange(updates : Partial<LoginCredentials>) : void {
-        setLoginCredentials((previousState) => ({...previousState, ...updates}));
-    }
-
-    function attemptLogin() : void {
-        postAttemptLogin(loginCredentials).then((result) => {
-            setLoginResponse(result.message);
-        })
-    }
 
     return <div>
-        <TextField id="filled-basic" label="Username" variant="filled" value={loginCredentials.email} onChange={(e) => handleLoginCredentialsChange({email: e.target.value})}/>
-        <TextField id="filled-basic" label="Password" variant="filled" value={loginCredentials.password} onChange={(e) => handleLoginCredentialsChange({password: e.target.value})}/>
-        <Button variant="contained" onClick={attemptLogin}>Login</Button>
-        <p>{loginResponse}</p>
+        <Paper className={classes.box} variant="outlined">
+            <TextField className={classes.loginObject} id="filled-basic" label="Username" variant="filled" value={loginCredentials.email} onChange={(e) => onLoginCredentialsChange({ email: e.target.value })} />
+            <TextField className={classes.loginObject} id="filled-basic" label="Password" variant="filled" value={loginCredentials.password} onChange={(e) => onLoginCredentialsChange({ password: e.target.value })} />
+            <Button className={classes.loginObject} variant="contained" onClick={attemptLogin}>Login</Button>
+            <p>{loginMessage}</p>
+        </Paper>
     </div>;
 }

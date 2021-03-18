@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core"
-import { TitleBar } from "../components/titlebar";
+import { TitleBar } from "../components/title_bar";
 import { User } from "../types/user";
 import { LoginBox } from "../components/login_box";
+import { Login } from "./login";
 
-type StyleProps = 
-{
-    titleBarHeightStyle: string;  
-}
+type StyleProps =
+    {
+        titleBarHeightStyle: string;
+    }
 const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     shellMain: {
         flexGrow: 1,
@@ -21,14 +22,14 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         minHeight: '100%'
     },
     container: {
-        height: ({titleBarHeightStyle}) => `calc(100vh - ${titleBarHeightStyle})`,
+        height: ({ titleBarHeightStyle }) => `calc(100vh - ${titleBarHeightStyle})`,
     },
     sidePaper: {
         padding: theme.spacing(0),
         textAlign: 'center',
         backgroundColor: theme.palette.primary.main,
         height: "100%"
-        
+
     },
     mainPaper: {
         padding: theme.spacing(0),
@@ -39,11 +40,11 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
 })));
 
 export function Shell(): JSX.Element {
-    const titleBarHeight:  string = '30px';  
-    const styleProps : StyleProps = {titleBarHeightStyle: titleBarHeight};
+    const titleBarHeight: string = '30px';
+    const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight };
     const classes = useStyles(styleProps);
 
-    const [currentUser, setCurrentUser] = useState<User|null>(null);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
 
     function onLogin(user: User): void {
         setCurrentUser(user);
@@ -53,22 +54,24 @@ export function Shell(): JSX.Element {
         <div className={classes.shellMain}>
             <TitleBar titleBarHeight={titleBarHeight} />
             <div className={classes.shellBody}>
-                {currentUser != null ? (
-            <Grid container direction="row" className={classes.container} spacing={0}>
-                <Grid item className={classes.container} xs={3} lg={3}>
-                    <Paper className={classes.sidePaper} square ></Paper>
+                <Grid container direction="row" className={classes.container} spacing={0}>
+                    {currentUser != null ? (
+                        <>
+                            <Grid item className={classes.container} xs={3} lg={3}>
+                                <Paper className={classes.sidePaper} square ></Paper>
+                            </Grid>
+                            <Grid item className={classes.container} xs={6} lg={6}>
+                                <Paper className={classes.mainPaper} square></Paper>
+                            </Grid>
+                            <Grid item className={classes.container} xs={3} lg={3}>
+                                <Paper className={classes.sidePaper} square></Paper>
+                            </Grid>
+                        </>
+                    ) : (
+                        <Login onLogin={onLogin}/>
+                    )}
                 </Grid>
-                <Grid item className={classes.container} xs={6} lg = {6}>
-                    <Paper className={classes.mainPaper} square></Paper>
-                </Grid>
-                <Grid item className={classes.container} xs={3} lg={3}>
-                    <Paper className={classes.sidePaper} square></Paper>
-                </Grid>
-            </Grid>
-                ) : (
-                    <LoginBox onLogin={onLogin} />
-                )}
             </div>
         </div>
     )
-}   
+}
