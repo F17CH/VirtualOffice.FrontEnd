@@ -1,7 +1,7 @@
 import { createStyles, Grid, makeStyles, Paper, Theme } from "@material-ui/core";
 import React, { useState } from "react";
-import { postAttemptLogin } from "../api/login_api";
 import { LoginBox } from "../components/login_box";
+import { postAttemptSignIn } from "../services/api/user/user_requests";
 import { LoginCredentials } from "../types/login_credentials";
 import { User } from "../types/user";
 
@@ -18,7 +18,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 })));
 
 export type LoginProps = {
-    onLogin: (user: User) => void;
+    onLogin: () => void;
 }
 
 export function Login({onLogin} : LoginProps): JSX.Element {
@@ -31,12 +31,12 @@ export function Login({onLogin} : LoginProps): JSX.Element {
     }
 
     function attemptLogin(): void {
-        postAttemptLogin(loginCredentials).then((result) => {
+        postAttemptSignIn(loginCredentials).then((result) => {
             setLoginResponse(result.message);
 
-            if (result.success && result.user)
+            if (result.success)
             {
-                onLogin(result.user);
+                onLogin();
             }
         })
     }

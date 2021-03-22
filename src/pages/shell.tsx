@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core"
 import { TitleBar } from "../components/title_bar";
 import { User } from "../types/user";
 import { LoginBox } from "../components/login_box";
 import { Login } from "./login";
+import { Main } from "./main";
+import { deleteUserToken, getUserToken } from "../services/user_token_manager";
+import { getHealthCheck, postSignOut } from "../services/api/user/user_requests";
 
 type StyleProps =
     {
@@ -44,10 +47,28 @@ export function Shell(): JSX.Element {
     const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight };
     const classes = useStyles(styleProps);
 
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
 
-    function onLogin(user: User): void {
-        setCurrentUser(user);
+    useEffect(function (): void {
+        (async function (): Promise<void> {
+            if (await getHealthCheck()) {
+                setUserSignedIn(true);
+            }
+        })();
+    }, []);
+
+    async function onLogin(): Promise<void> {
+        if (await getHealthCheck()) {
+        setUserSignedIn(true)
+    }
+    }
+
+    async function onLogout(): Promise<void> {
+        await postSignOut().then(() => {
+
+            deleteUserToken();
+            setUserSignedIn(false);
+        });
     }
 
     return (
@@ -55,20 +76,10 @@ export function Shell(): JSX.Element {
             <TitleBar titleBarHeight={titleBarHeight} />
             <div className={classes.shellBody}>
                 <Grid container direction="row" className={classes.container} spacing={0}>
-                    {currentUser != null ? (
-                        <>
-                            <Grid item className={classes.container} xs={3} lg={3}>
-                                <Paper className={classes.sidePaper} square ></Paper>
-                            </Grid>
-                            <Grid item className={classes.container} xs={6} lg={6}>
-                                <Paper className={classes.mainPaper} square></Paper>
-                            </Grid>
-                            <Grid item className={classes.container} xs={3} lg={3}>
-                                <Paper className={classes.sidePaper} square></Paper>
-                            </Grid>
-                        </>
+                    {userSignedIn ? (
+                        <Main onLogout={onLogout}/>
                     ) : (
-                        <Login onLogin={onLogin}/>
+                        <Login onLogin={onLogin} />
                     )}
                 </Grid>
             </div>

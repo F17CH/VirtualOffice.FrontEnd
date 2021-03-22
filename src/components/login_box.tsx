@@ -3,8 +3,6 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@material-ui/core";
 import { User } from "../types/user";
 import { LoginCredentials } from "../types/login_credentials";
-import { postAttemptLogin } from "../api/login_api";
-
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     box: {
