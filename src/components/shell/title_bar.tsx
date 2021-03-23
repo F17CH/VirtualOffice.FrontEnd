@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core";
-import SvgClose from "./icons/close";
-import SvgMax from "./icons/max";
-import SvgMin from "./icons/min";
+import SvgClose from "../icons/close";
+import SvgMax from "../icons/max";
+import SvgMin from "../icons/min";
 import { ipcRenderer as ipc, remote} from 'electron';
-import SvgLogo from "./icons/logo";
+import SvgLogo from "../icons/logo";
 
 type StyleProps =
     {

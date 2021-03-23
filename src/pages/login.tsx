@@ -1,6 +1,6 @@
 import { createStyles, Grid, makeStyles, Paper, Theme } from "@material-ui/core";
 import React, { useState } from "react";
-import { LoginBox } from "../components/login_box";
+import { LoginBox } from "../components/login/login_box";
 import { postAttemptSignIn } from "../services/api/user/user_requests";
 import { LoginCredentials } from "../types/login_credentials";
 import { User } from "../types/user";

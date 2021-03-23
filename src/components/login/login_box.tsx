@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@material-ui/core";
-import { User } from "../types/user";
-import { LoginCredentials } from "../types/login_credentials";
+import { User } from "../../types/user";
+import { LoginCredentials } from "../../types/login_credentials";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     box: {
@@ -38,7 +38,7 @@ export function LoginBox({
     return <div>
         <Paper className={classes.box} variant="outlined">
             <TextField className={classes.loginObject} id="filled-basic" label="Username" variant="filled" value={loginCredentials.email} onChange={(e) => onLoginCredentialsChange({ email: e.target.value })} />
-            <TextField className={classes.loginObject} id="filled-basic" label="Password" variant="filled" value={loginCredentials.password} onChange={(e) => onLoginCredentialsChange({ password: e.target.value })} />
+            <TextField className={classes.loginObject} id="filled-basic" label="Password" variant="filled" type="password" value={loginCredentials.password} onChange={(e) => onLoginCredentialsChange({ password: e.target.value })} />
             <Button className={classes.loginObject} variant="contained" onClick={attemptLogin}>Login</Button>
             <p>{loginMessage}</p>
         </Paper>

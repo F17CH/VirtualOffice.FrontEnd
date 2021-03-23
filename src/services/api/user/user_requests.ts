@@ -1,5 +1,6 @@
 import { LoginCredentials } from "../../../types/login_credentials";
 import { LoginResult } from "../../../types/login_result";
+import { User } from "../../../types/user";
 import { setUserToken } from "../../user_token_manager";
 import { getResponseBody } from "../api_utils";
 import { nonAuthorizedRequest } from "../non_authorized_request";
@@ -65,5 +66,12 @@ export async function getHealthCheck(): Promise<boolean> {
 
         return result;
         });
+}
 
+export async function getSelf(): Promise<User> {
+    return await userAuthorizedRequest(`http://localhost:4010/api/users/self`,
+        "get",
+    ).then((response) => {
+        return getResponseBody<User>(response);
+        });
 }

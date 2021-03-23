@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core"
-import { TitleBar } from "../components/title_bar";
-import { User } from "../types/user";
-import { LoginBox } from "../components/login_box";
+import { TitleBar } from "../components/shell/title_bar";
 import { Login } from "./login";
 import { Main } from "./main";
 import { deleteUserToken, getUserToken } from "../services/user_token_manager";
@@ -26,20 +24,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     },
     container: {
         height: ({ titleBarHeightStyle }) => `calc(100vh - ${titleBarHeightStyle})`,
-    },
-    sidePaper: {
-        padding: theme.spacing(0),
-        textAlign: 'center',
-        backgroundColor: theme.palette.primary.main,
-        height: "100%"
-
-    },
-    mainPaper: {
-        padding: theme.spacing(0),
-        textAlign: 'center',
-        backgroundColor: theme.palette.primary.main,
-        height: "100%"
-    },
+    }
 })));
 
 export function Shell(): JSX.Element {
