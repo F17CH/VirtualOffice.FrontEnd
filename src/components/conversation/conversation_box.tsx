@@ -3,10 +3,13 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@material-ui/core";
 import { User } from "../../types/user";
 import { LoginCredentials } from "../../types/login_credentials";
+import { postConversationCreate } from "../../services/api/conversation/conversation_requests";
+import { ConversationCreateRequest } from "../../services/api/conversation/types/conversation_create_request";
+import { Conversation } from "../../types/conversation/conversation";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
-    userBox: {
-        flexBasis: "200px",
+    newConversationBox: {
+        flexBasis: "40px",
         backgroundColor: theme.palette.secondary.main,
         display: "flex",
         justifyContent: "center",
@@ -15,23 +18,14 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
 })));
 
-export type UserBoxProps = {
-    user: User;
-    onLogout: () => void;
+export type ConversationBoxProps = {
+    conversation: Conversation;
 }
 
-export function UserBox({user, onLogout}: UserBoxProps): JSX.Element {
+export function ConversationBox({conversation}: ConversationBoxProps): JSX.Element {
     const classes = useStyles();
 
-    return (<Paper className={classes.userBox} square>
-        {user ? (
-        <>
-        <p> {user.firstName + " " + user.lastName} </p>
-        <Button variant="contained" onClick={onLogout}>Logout</Button>
-        </>
-        ) : (
-        <>
-        </>
-        )}
+    return (<Paper className={classes.newConversationBox} square>
+        <p> {conversation.id} </p>
     </Paper>)
 }

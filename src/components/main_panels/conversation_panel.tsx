@@ -4,6 +4,9 @@ import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@ma
 import { User } from "../../types/user";
 import { LoginCredentials } from "../../types/login_credentials";
 import { UserBox } from "../user/user_box";
+import { NewConversationBox } from "../conversation/new_conversation_box";
+import { Conversation } from "../../types/conversation/conversation";
+import { ConversationBox } from "../conversation/conversation_box";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     panelBack: {
@@ -21,19 +24,28 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     }
 })));
 
-export type DataPanelProps = {
-    user: User;
-    onLogout: () => void;
+export type ConversationPanelProps = {
 }
 
-export function DataPanel({user, onLogout}: DataPanelProps): JSX.Element {
+export function ConversationPanel({ }: ConversationPanelProps): JSX.Element {
     const classes = useStyles();
+    const [conversations, setConversations] = useState<Conversation[]>([]);
+
+
+    function onNewConversation(conversationId: string): void {
+        var newConversation: Conversation = { id: conversationId };
+
+        setConversations((prevState: Conversation[]) => [...prevState, newConversation]);
+    }
 
     return (
         <Paper className={classes.panelBack} square>
             <Grid container className={classes.panelGridMain}>
+                <NewConversationBox onNewConversation={onNewConversation} />
+                {conversations.map((conversation, index) => (
+                    <ConversationBox conversation={conversation} />
+                ))}
                 <Paper className={classes.panelTopCover} square />
-                <UserBox user={user} onLogout={onLogout}/>
             </Grid>
         </Paper>
     )
