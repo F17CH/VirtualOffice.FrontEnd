@@ -5,7 +5,7 @@ import { setUserToken } from "../../user_token_manager";
 import { getResponseBody } from "../api_utils";
 import { nonAuthorizedRequest } from "../non_authorized_request";
 import { userAuthorizedRequest } from "../user_authorized_request";
-import { SignInResponse } from "./sign_in_response";
+import { SignInResponse } from "./types/sign_in_response";
 
 export async function postAttemptSignIn(loginCredentials: LoginCredentials): Promise<LoginResult> {
     var result: LoginResult = {
