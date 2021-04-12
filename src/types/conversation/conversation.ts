@@ -2,6 +2,6 @@ import { Message } from "./message";
 
 export type Conversation = {
     id: string;
-    userIds: string[];
+    user_ids: string[];
     messages: Message[];
 }

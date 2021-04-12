@@ -1,3 +1,4 @@
+import { Conversation } from "../../../types/conversation/conversation";
 import { LoginCredentials } from "../../../types/login_credentials";
 import { LoginResult } from "../../../types/login_result";
 import { User } from "../../../types/user";
@@ -7,9 +8,8 @@ import { nonAuthorizedRequest } from "../non_authorized_request";
 import { SignInResponse } from "../user/types/sign_in_response";
 import { userAuthorizedRequest } from "../user_authorized_request";
 import { ConversationCreateRequest } from "./types/conversation_create_request";
-import { ConversationCreateResponse } from "./types/conversation_create_response";
 
-export async function postConversationCreate(conversationCreateRequest : ConversationCreateRequest): Promise<ConversationCreateResponse> {
+export async function postConversationCreate(conversationCreateRequest : ConversationCreateRequest): Promise<Conversation> {
 
     return await userAuthorizedRequest(`http://localhost:4010/api/conversation/`,
         "post",
@@ -18,13 +18,14 @@ export async function postConversationCreate(conversationCreateRequest : Convers
             body: JSON.stringify(conversationCreateRequest) 
         }
     ).then(async (response) => {
-        var result: ConversationCreateResponse;
+        var result: Conversation;
 
         switch (response.status) {
             case 200: {
-                var conversationCreateResponse: ConversationCreateResponse = await getResponseBody<ConversationCreateResponse>(response);
+                debugger;
+                var conversation: Conversation = await getResponseBody<Conversation>(response);
 
-                result = conversationCreateResponse;
+                result = conversation;
                 break;
             }
             default: {

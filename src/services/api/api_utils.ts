@@ -4,7 +4,7 @@ export async function getResponseBody<T>(response: Response): Promise<T> {
     let data: T = null;
 
     if (text) {
-        data = JSON.parse(text);
+        data = JSON.parse(text).data;
     }
 
     return data;
