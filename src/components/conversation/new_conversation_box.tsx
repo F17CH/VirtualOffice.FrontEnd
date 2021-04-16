@@ -5,6 +5,7 @@ import { User } from "../../types/user";
 import { LoginCredentials } from "../../types/login_credentials";
 import { postConversationCreate } from "../../services/api/conversation/conversation_requests";
 import { ConversationCreateRequest } from "../../services/api/conversation/types/conversation_create_request";
+import { Conversation } from "../../types/conversation/conversation";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     newConversationBox: {
@@ -17,11 +18,11 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
 })));
 
-export type NewConversationBoxProps = {
-    onNewConversation: (conversationId: string) => void;
+export type NewConversationMenuBoxProps = {
+    onNewConversation: (newConversation: Conversation) => void;
 }
 
-export function NewConversationBox({onNewConversation}: NewConversationBoxProps): JSX.Element {
+export function NewConversationMenuBox({onNewConversation}: NewConversationMenuBoxProps): JSX.Element {
     const classes = useStyles();
     const [userId, setUserId] = useState<string>("");
     const [createConversationRequest, setCreateConversationRequest] = useState<ConversationCreateRequest>({ user_ids: [] }); 
@@ -40,7 +41,7 @@ export function NewConversationBox({onNewConversation}: NewConversationBoxProps)
         });
 
         postConversationCreate(newState).then((createConversationResponse) => {
-            onNewConversation(createConversationResponse.id);
+            onNewConversation(createConversationResponse);
             setCreateConversationRequest( { user_ids: [] } );
         });
     }

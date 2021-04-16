@@ -6,17 +6,15 @@ import { LoginCredentials } from "../../types/login_credentials";
 import { UserBox } from "../user/user_box";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
-    panelBack: {
-        padding: theme.spacing(0),
-        textAlign: 'center',
-        backgroundColor: theme.palette.secondary.main,
-        height: "100%"
+    panelGridContainer: {
+        height: "100%",
+        flexDirection: "row"
     },
-    panelGridMain: {
+    panelGridItem: {
         height: "100%",
         flexDirection: "column"
     },
-    panelTopCover: {
+    panelCover: {
         flexGrow: 1
     }
 })));
@@ -26,15 +24,17 @@ export type DataPanelProps = {
     onLogout: () => void;
 }
 
-export function DataPanel({user, onLogout}: DataPanelProps): JSX.Element {
+export function DataPanel({ user, onLogout }: DataPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
-        <Paper className={classes.panelBack} square>
-            <Grid container className={classes.panelGridMain}>
-                <Paper className={classes.panelTopCover} square />
-                <UserBox user={user} onLogout={onLogout}/>
+        <>
+            <Grid container className={classes.panelGridContainer}>
+                <Grid item container className={classes.panelGridItem} md={12}>
+                    <Paper className={classes.panelCover} square />
+                    <UserBox user={user} onLogout={onLogout} />
+                </Grid>
             </Grid>
-        </Paper>
+        </>
     )
 }

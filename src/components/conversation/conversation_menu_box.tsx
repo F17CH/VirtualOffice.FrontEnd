@@ -18,14 +18,15 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
 })));
 
-export type ConversationBoxProps = {
+export type ConversationMenuBoxProps = {
     conversation: Conversation;
+    onClick: () => void;
 }
 
-export function ConversationBox({conversation}: ConversationBoxProps): JSX.Element {
+export function ConversationMenuBox({conversation, onClick}: ConversationMenuBoxProps): JSX.Element {
     const classes = useStyles();
 
-    return (<Paper className={classes.newConversationBox} square>
+    return (<Paper className={classes.newConversationBox} square onClick={onClick}>
         <p> {conversation.id} </p>
     </Paper>)
 }
