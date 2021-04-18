@@ -75,3 +75,11 @@ export async function getSelf(): Promise<User> {
         return getResponseBody<User>(response);
         });
 }
+
+export async function getUser(userId: string): Promise<User> {
+    return await userAuthorizedRequest(`http://localhost:4010/api/users/${userId}`,
+        "get",
+    ).then((response) => {
+        return getResponseBody<User>(response);
+        });
+}

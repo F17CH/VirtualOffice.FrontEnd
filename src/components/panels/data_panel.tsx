@@ -15,6 +15,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         flexDirection: "column"
     },
     panelCover: {
+        backgroundColor: theme.palette.primary.main,
         flexGrow: 1
     }
 })));

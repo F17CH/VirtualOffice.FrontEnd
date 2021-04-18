@@ -5,7 +5,9 @@ import { TitleBar } from "../components/shell/title_bar";
 import { Login } from "./login";
 import { Main } from "./main";
 import { deleteUserToken, getUserToken } from "../services/user_token_manager";
-import { getHealthCheck, postSignOut } from "../services/api/user/user_requests";
+import { getHealthCheck, getSelf, postSignOut } from "../services/api/user/user_requests";
+import { User } from "../types/user";
+import { initSocket } from "../services/channel/socket_handler";
 
 type StyleProps =
     {
@@ -32,27 +34,25 @@ export function Shell(): JSX.Element {
     const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight };
     const classes = useStyles(styleProps);
 
-    const [userSignedIn, setUserSignedIn] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
 
     useEffect(function (): void {
         (async function (): Promise<void> {
-            if (await getHealthCheck()) {
-                setUserSignedIn(true);
-            }
+            getSelf().then((user) => setCurrentUser(user));
+            initSocket();
         })();
     }, []);
 
     async function onLogin(): Promise<void> {
-        if (await getHealthCheck()) {
-        setUserSignedIn(true)
-    }
+        getSelf().then((user) => setCurrentUser(user));
+        initSocket();
     }
 
     async function onLogout(): Promise<void> {
         await postSignOut().then(() => {
 
             deleteUserToken();
-            setUserSignedIn(false);
+            setCurrentUser(null);
         });
     }
 
@@ -61,8 +61,8 @@ export function Shell(): JSX.Element {
             <TitleBar titleBarHeight={titleBarHeight} />
             <div className={classes.shellBody}>
                 <Grid container direction="row" className={classes.container} spacing={0}>
-                    {userSignedIn ? (
-                        <Main onLogout={onLogout}/>
+                    {currentUser ? (
+                        <Main currentUser={currentUser} onLogout={onLogout}/>
                     ) : (
                         <Login onLogin={onLogin} />
                     )}

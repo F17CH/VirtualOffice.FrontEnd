@@ -11,7 +11,7 @@ import { ConversationCreateRequest } from "./types/conversation_create_request";
 
 export async function postConversationCreate(conversationCreateRequest : ConversationCreateRequest): Promise<Conversation> {
 
-    return await userAuthorizedRequest(`http://localhost:4010/api/conversation/`,
+    return await userAuthorizedRequest(`http://localhost:4010/api/conversations/`,
         "post",
         {
             headers: {"Content-Type": "application/json"},
@@ -22,7 +22,6 @@ export async function postConversationCreate(conversationCreateRequest : Convers
 
         switch (response.status) {
             case 200: {
-                debugger;
                 var conversation: Conversation = await getResponseBody<Conversation>(response);
 
                 result = conversation;

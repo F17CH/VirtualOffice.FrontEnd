@@ -4,7 +4,7 @@ import { LoginBox } from "../components/login/login_box";
 import { ConversationPanel } from "../components/panels/conversation_panel";
 import { DataPanel } from "../components/panels/data_panel";
 import { UserBox } from "../components/user/user_box";
-import { getSelf, postAttemptSignIn } from "../services/api/user/user_requests";
+import { getSelf, getUser, postAttemptSignIn } from "../services/api/user/user_requests";
 import { LoginCredentials } from "../types/login_credentials";
 import { User } from "../types/user";
 
@@ -17,28 +17,41 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 })));
 
 export type MainProps = {
+    currentUser: User;
     onLogout: () => void;
 }
 
-export function Main({ onLogout }: MainProps): JSX.Element {
+export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
     const classes = useStyles();
-    const [user, setUser] = useState<User|null>(null);
+    const [loadedUsers, setLoadedUsers] = useState<{ [id: string]: User }>({});
 
-    useEffect(function (): void {
-        (async function (): Promise<void> {
-            await getSelf().then((user) => {
-                setUser(user);
+    function loadUser(userId: string): User {
+        var user: User = null;
+
+        if (loadedUsers[userId]) {
+            user = loadedUsers[userId];
+        }
+        else {
+            getUser(userId).then((newUser: User) => {
+                user = newUser;
+
+                setLoadedUsers((prevState) => {
+                    prevState[userId] = user;
+                    return { ...prevState };
+                });
             });
-        })();
-    }, []);
+        }
+
+        return user;
+    }
 
     return (
         <>
             <Grid item className={classes.mainContainer} md={9}>
-                <ConversationPanel/>
+                <ConversationPanel currentUser={currentUser} loadUser={loadUser} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
-                <DataPanel user={user} onLogout={onLogout} />
+                <DataPanel user={currentUser} onLogout={onLogout} />
             </Grid>
         </>
     )

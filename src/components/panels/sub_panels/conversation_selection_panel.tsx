@@ -8,6 +8,7 @@ import { NewConversationMenuBox } from "../../conversation/new_conversation_box"
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     panelTopCover: {
+        backgroundColor: theme.palette.primary.main,
         flexGrow: 1
     }
 })));

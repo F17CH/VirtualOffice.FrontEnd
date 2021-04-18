@@ -4,30 +4,54 @@ import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@ma
 import { Conversation } from "../../../types/conversation/conversation";
 import { ConversationMenuBox } from "../../conversation/conversation_menu_box";
 import { NewConversationMenuBox } from "../../conversation/new_conversation_box";
+import { MessageInput } from "../../conversation/message_input";
+import { MessageRow } from "../../conversation/message_row";
+import { User } from "../../../types/user";
+import { Message } from "../../../types/conversation/message";
 
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
-    panelTopCover: {
-        flexGrow: 1
+    backPanel: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.primary.main,
+        padding: "20px"
+    },
+    conversationPanel: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.secondary.main,
+        height: "100%"
     }
 })));
 
 export type ConversationViewPanelProps = {
     conversation: Conversation
+    users: { [id: string]: User}
+    onNewMessageContent: (messageContent: string) => void
 }
 
-export function ConversationViewPanel({ conversation }: ConversationViewPanelProps): JSX.Element {
+export function ConversationViewPanel({ conversation, users, onNewMessageContent }: ConversationViewPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
         <>
-            <Paper className={classes.panelTopCover} square>
-                {conversation ? (
-                    <h1>{conversation.id}</h1>
-                ) : (
-                    <h1>NO CONVERSATION SELECTED</h1>
-                )}
-            </Paper>
+            <Grid container className={classes.backPanel}>
+                <Paper className={classes.conversationPanel} square>
+                    {conversation ? (
+                        <>
+                            <Typography>{conversation.id}</Typography>
+                            <>
+                                {conversation.messages.map((message, index) => (
+                                    <MessageRow message={message} user={users[message.user_id]} />
+                                ))}
+                            </>
+                            <MessageInput onNewMessageContent={onNewMessageContent} />
+                        </>
+                    ) : (
+                        <h1>NO CONVERSATION SELECTED</h1>
+                    )}
+
+                </Paper>
+            </Grid>
         </>
     )
 }
