@@ -5,6 +5,11 @@ import { ConversationPanel } from "../components/panels/conversation_panel";
 import { DataPanel } from "../components/panels/data_panel";
 import { UserBox } from "../components/user/user_box";
 import { getSelf, getUser, postAttemptSignIn } from "../services/api/user/user_requests";
+import { joinChannel } from "../services/channel/channel_handler";
+import { initSocket } from "../services/channel/socket_handler";
+import { newUserChannel } from "../services/channel/user_channel_handler";
+import { Conversation } from "../types/conversation/conversation";
+import { Message } from "../types/conversation/message";
 import { LoginCredentials } from "../types/login_credentials";
 import { User } from "../types/user";
 
@@ -23,6 +28,48 @@ export type MainProps = {
 
 export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
     const classes = useStyles();
+
+    useEffect(function (): void {
+        (async function (): Promise<void> {
+            userInit();
+        })();
+    }, [currentUser]);
+
+    function userInit(): void {
+        initSocket();
+        userChannelInit();
+
+    }
+
+    function userChannelInit(): void{
+        var userChannel = newUserChannel(currentUser.id);
+
+        userChannel.on("conversation_new", async (response) => {
+            var newConversation : Conversation = response.data;
+            onNewConversation(newConversation);
+        })
+
+        joinChannel(userChannel);
+    }
+
+
+    const [conversations, setConversations] = useState<Conversation[]>([]);
+
+    function onNewConversation(newConversation: Conversation): void {
+        setConversations((prevState: Conversation[]) => [...prevState, newConversation]);
+    }
+
+    function onNewMessage(currentConversation: Conversation, messageContent: string): void {
+        var newMessage: Message = { id: null, user_id: currentUser.id, content: messageContent };
+
+        setConversations((prevState) => {
+            var convIndex = prevState.findIndex(conv => conv == currentConversation);
+            currentConversation.messages.push(newMessage);
+            prevState[convIndex] = currentConversation;
+            return [...prevState];
+        });
+    }
+
     const [loadedUsers, setLoadedUsers] = useState<{ [id: string]: User }>({});
 
     function loadUser(userId: string): User {
@@ -48,7 +95,7 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
     return (
         <>
             <Grid item className={classes.mainContainer} md={9}>
-                <ConversationPanel currentUser={currentUser} loadUser={loadUser} />
+                <ConversationPanel currentUser={currentUser} conversations={conversations} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={loadUser} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
                 <DataPanel user={currentUser} onLogout={onLogout} />

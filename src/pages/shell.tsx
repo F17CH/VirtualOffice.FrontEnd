@@ -8,6 +8,8 @@ import { deleteUserToken, getUserToken } from "../services/user_token_manager";
 import { getHealthCheck, getSelf, postSignOut } from "../services/api/user/user_requests";
 import { User } from "../types/user";
 import { initSocket } from "../services/channel/socket_handler";
+import { joinChannel, newChannel } from "../services/channel/channel_handler";
+import { newUserChannel } from "../services/channel/user_channel_handler";
 
 type StyleProps =
     {
@@ -38,14 +40,12 @@ export function Shell(): JSX.Element {
 
     useEffect(function (): void {
         (async function (): Promise<void> {
-            getSelf().then((user) => setCurrentUser(user));
-            initSocket();
+            await attemptLoginUser();
         })();
     }, []);
 
     async function onLogin(): Promise<void> {
-        getSelf().then((user) => setCurrentUser(user));
-        initSocket();
+        await attemptLoginUser();
     }
 
     async function onLogout(): Promise<void> {
@@ -56,13 +56,21 @@ export function Shell(): JSX.Element {
         });
     }
 
+    async function attemptLoginUser(): Promise<void> {
+        getSelf().then((user) => {
+            if (user) {
+                setCurrentUser(user)
+            }
+        });
+    }
+
     return (
         <div className={classes.shellMain}>
             <TitleBar titleBarHeight={titleBarHeight} />
             <div className={classes.shellBody}>
                 <Grid container direction="row" className={classes.container} spacing={0}>
                     {currentUser ? (
-                        <Main currentUser={currentUser} onLogout={onLogout}/>
+                        <Main currentUser={currentUser} onLogout={onLogout} />
                     ) : (
                         <Login onLogin={onLogin} />
                     )}

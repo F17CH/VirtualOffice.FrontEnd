@@ -68,11 +68,17 @@ export async function getHealthCheck(): Promise<boolean> {
         });
 }
 
-export async function getSelf(): Promise<User> {
+export async function getSelf(): Promise<User|null> {
     return await userAuthorizedRequest(`http://localhost:4010/api/users/self`,
         "get",
-    ).then((response) => {
-        return getResponseBody<User>(response);
+    ).then(async (response) => {
+        var result: User|null = null;
+
+        if (response) {
+            result = await getResponseBody<User>(response);
+        }
+
+        return result;
         });
 }
 

@@ -31,23 +31,15 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 
 export type ConversationPanelProps = {
     currentUser: User;
+    conversations: Conversation[];
+    onNewConversation: (conversation: Conversation) => void;
+    onNewMessage: (conversation: Conversation, messageContent: string) => void;
     loadUser: (userId: string) => User;
 }
 
-export function ConversationPanel({ currentUser, loadUser }: ConversationPanelProps): JSX.Element {
+export function ConversationPanel({ currentUser, conversations, onNewConversation, onNewMessage, loadUser }: ConversationPanelProps): JSX.Element {
     const classes = useStyles();
-    const [conversations, setConversations] = useState<Conversation[]>([]);
     const [selectedConversation, setSelectedConversation] = useState<Conversation>();
-
-    function onNewConversation(newConversation: Conversation): void {
-        setConversations((prevState: Conversation[]) => [...prevState, newConversation]);
-
-        var channel = newChannel("test", "test");
-
-        joinChannel(channel);
-
-        sayHello(channel, "World!");
-    }
 
     function getConversationUsers(conversation: Conversation): { [id: string]: User } {
         var users: { [id: string]: User } = {};
@@ -68,17 +60,6 @@ export function ConversationPanel({ currentUser, loadUser }: ConversationPanelPr
         }
 
         return users;
-    }
-
-    function onNewMessage(currentConversation: Conversation, messageContent: string): void {
-        var newMessage: Message = { id: null, user_id: currentUser.id, content: messageContent };
-
-        setConversations((prevState) => {
-            var convIndex = prevState.findIndex(conv => conv == currentConversation);
-            currentConversation.messages.push(newMessage);
-            prevState[convIndex] = currentConversation;
-            return [...prevState];
-        });
     }
 
     function onConversationSelected(selectedConversation: Conversation): void {
