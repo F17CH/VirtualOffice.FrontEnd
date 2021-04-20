@@ -25,11 +25,11 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 
 export type ConversationViewPanelProps = {
     conversation: Conversation
-    users: { [id: string]: User}
+    loadUser: (userId: string) => User;
     onNewMessageContent: (messageContent: string) => void
 }
 
-export function ConversationViewPanel({ conversation, users, onNewMessageContent }: ConversationViewPanelProps): JSX.Element {
+export function ConversationViewPanel({ conversation, loadUser, onNewMessageContent }: ConversationViewPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
@@ -41,7 +41,7 @@ export function ConversationViewPanel({ conversation, users, onNewMessageContent
                             <Typography>{conversation.id}</Typography>
                             <>
                                 {conversation.messages.map((message, index) => (
-                                    <MessageRow message={message} user={users[message.user_id]} />
+                                    <MessageRow message={message} user={loadUser(message.user_id)} key={message.id} />
                                 ))}
                             </>
                             <MessageInput onNewMessageContent={onNewMessageContent} />

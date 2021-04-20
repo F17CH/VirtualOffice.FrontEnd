@@ -13,6 +13,7 @@ import { Message } from "../../types/conversation/message";
 import { Socket } from "phoenix";
 import { joinChannel, newChannel, sayHello } from "../../services/channel/channel_handler";
 import { initSocket } from "../../services/channel/socket_handler";
+import { postMessageCreate } from "../../services/api/conversation/message_requests";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     panelGridContainer: {
@@ -33,7 +34,7 @@ export type ConversationPanelProps = {
     currentUser: User;
     conversations: Conversation[];
     onNewConversation: (conversation: Conversation) => void;
-    onNewMessage: (conversation: Conversation, messageContent: string) => void;
+    onNewMessage: (conversation: Conversation, message: Message) => void;
     loadUser: (userId: string) => User;
 }
 
@@ -41,7 +42,8 @@ export function ConversationPanel({ currentUser, conversations, onNewConversatio
     const classes = useStyles();
     const [selectedConversation, setSelectedConversation] = useState<Conversation>();
 
-    function getConversationUsers(conversation: Conversation): { [id: string]: User } {
+  /*  function getConversationUsers(conversation: Conversation): { [id: string]: User } {
+        debugger;
         var users: { [id: string]: User } = {};
 
         if (conversation) {
@@ -50,20 +52,24 @@ export function ConversationPanel({ currentUser, conversations, onNewConversatio
                     users[currentUser.id] = currentUser;
                 }
                 else {
-                    users[userId] == loadUser(userId);
+                    users[userId] = loadUser(userId);
                 }
             });
         }
 
-        if (conversation) {
-            users[currentUser.id] = currentUser;
-        }
-
         return users;
-    }
+    } */
 
     function onConversationSelected(selectedConversation: Conversation): void {
         setSelectedConversation(selectedConversation);
+    }
+
+    function onNewMessageContent(selectedConversation: Conversation, messageContent: string) : void {
+        var newMessage: Message = { id: null, user_id: currentUser.id, content: messageContent };
+
+        postMessageCreate(selectedConversation.id, newMessage).then(message => {
+            onNewMessage(selectedConversation, message);
+        })
     }
 
     return (
@@ -73,7 +79,7 @@ export function ConversationPanel({ currentUser, conversations, onNewConversatio
                     <ConversationSelectionPanel conversations={conversations} onNewConversation={onNewConversation} onConversationSelected={onConversationSelected} />
                 </Grid>
                 <Grid item container className={classes.panelGridItem} md={9}>
-                    <ConversationViewPanel conversation={selectedConversation} users={getConversationUsers(selectedConversation)} onNewMessageContent={(messageContent: string) => onNewMessage(selectedConversation, messageContent)} />
+                    <ConversationViewPanel conversation={selectedConversation} loadUser={loadUser} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversation, messageContent)} />
                 </Grid>
             </Grid>
         </>

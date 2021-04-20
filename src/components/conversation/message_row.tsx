@@ -21,7 +21,7 @@ export function MessageRow({ message, user }: MessageRowProps): JSX.Element {
     return (
         <>
         <Typography variant="body1">
-            {user.firstName} {user.lastName} : {message.content}
+            {user ? user.firstName : "NULL USER"} : {message.content}
         </Typography>
         </>
     )

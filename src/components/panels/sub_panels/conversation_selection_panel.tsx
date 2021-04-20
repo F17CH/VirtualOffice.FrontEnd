@@ -26,7 +26,7 @@ export function ConversationSelectionPanel({conversations, onNewConversation, on
         <>
             <NewConversationMenuBox onNewConversation={onNewConversation} />
             {conversations.map((conversation, index) => (
-                <ConversationMenuBox conversation={conversation} onClick={() => onConversationSelected(conversation)} />
+                <ConversationMenuBox conversation={conversation} onClick={() => onConversationSelected(conversation)} key={conversation.id} />
             ))}
             <Paper className={classes.panelTopCover} square />
         </>
