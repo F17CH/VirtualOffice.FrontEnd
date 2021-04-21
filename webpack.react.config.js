@@ -1,6 +1,14 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const DotenvPlugin = require("dotenv-webpack")
+const DotenvPlugin = require('dotenv-webpack');
+
+const root = path.resolve(__dirname);
+
+const env = new DotenvPlugin({
+  path: path.resolve(root, ".env"),
+  safe: false,
+  systemvars: false
+});
 
 module.exports = {
   resolve: {
@@ -20,9 +28,9 @@ module.exports = {
         },
       },
       {
-        test : /\.png$/,
+        test: /\.png$/,
         exclude: /(node_modules)/,
-        loader : 'file-loader'
+        loader: 'file-loader'
       },
       {
         test: /\.svg$/,
@@ -49,7 +57,9 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "js/[name].js",
   },
-  plugins: [new HtmlWebpackPlugin({
-    template: "./src/index.ejs"
-  })]
+  plugins: [
+    env,
+    new HtmlWebpackPlugin({
+      template: "./src/index.ejs"
+    })]
 };

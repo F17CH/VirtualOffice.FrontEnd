@@ -35,30 +35,29 @@ export type ConversationPanelProps = {
     conversations: Conversation[];
     onNewConversation: (conversation: Conversation) => void;
     onNewMessage: (conversation: Conversation, message: Message) => void;
-    loadUser: (userId: string) => User;
+    loadUser: (userId: string) => Promise<User>;
 }
 
 export function ConversationPanel({ currentUser, conversations, onNewConversation, onNewMessage, loadUser }: ConversationPanelProps): JSX.Element {
     const classes = useStyles();
     const [selectedConversation, setSelectedConversation] = useState<Conversation>();
 
-  /*  function getConversationUsers(conversation: Conversation): { [id: string]: User } {
-        debugger;
+    async function getConversationUsers(conversation: Conversation): Promise<{ [id: string]: User }> {
         var users: { [id: string]: User } = {};
 
         if (conversation) {
-            conversation.user_ids.map((userId) => {
+            conversation.user_ids.map(async (userId) => {
                 if (userId == currentUser.id) {
                     users[currentUser.id] = currentUser;
                 }
                 else {
-                    users[userId] = loadUser(userId);
+                    users[userId] = await loadUser(userId);
                 }
             });
         }
 
         return users;
-    } */
+    }
 
     function onConversationSelected(selectedConversation: Conversation): void {
         setSelectedConversation(selectedConversation);
@@ -79,7 +78,7 @@ export function ConversationPanel({ currentUser, conversations, onNewConversatio
                     <ConversationSelectionPanel conversations={conversations} onNewConversation={onNewConversation} onConversationSelected={onConversationSelected} />
                 </Grid>
                 <Grid item container className={classes.panelGridItem} md={9}>
-                    <ConversationViewPanel conversation={selectedConversation} loadUser={loadUser} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversation, messageContent)} />
+                    <ConversationViewPanel conversation={selectedConversation} loadUsers={() => getConversationUsers(selectedConversation)} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversation, messageContent)} />
                 </Grid>
             </Grid>
         </>

@@ -82,9 +82,7 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
 
     const loadedUsers: { [id: string]: User } = {};
 
-    function loadUser(userId: string): User {
-        debugger;
-        
+    async function loadUser(userId: string): Promise<User> {
         var user: User = null;
 
         if (userId == currentUser.id) {
@@ -94,10 +92,8 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
             user = loadedUsers[userId];
         }
         else {
-            getUser(userId).then((newUser: User) => {
-                loadedUsers[newUser.id] = newUser;
-                user = newUser;
-            });
+            user = await getUser(userId);
+            loadedUsers[userId] = user;
         }
 
         return user;

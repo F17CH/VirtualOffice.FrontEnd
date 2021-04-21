@@ -10,8 +10,8 @@ import { userAuthorizedRequest } from "../user_authorized_request";
 import { ConversationCreateRequest } from "./types/conversation_create_request";
 
 export async function postConversationCreate(conversationCreateRequest : ConversationCreateRequest): Promise<Conversation> {
-
-    return await userAuthorizedRequest(`http://localhost:4010/api/conversations/`,
+    debugger;
+    return await userAuthorizedRequest(`${process.env.BACKEND_URL}/conversations/`,
         "post",
         {
             headers: {"Content-Type": "application/json"},
