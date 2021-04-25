@@ -13,7 +13,7 @@ export async function postAttemptSignIn(loginCredentials: LoginCredentials): Pro
         message: "",
     }
 
-    return await nonAuthorizedRequest(`http://localhost:4010/api/users/sign_in`,
+    return await nonAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/sign_in`,
         "post",
         {   headers: {"Content-Type": "application/json"},
             body: JSON.stringify(loginCredentials) }
@@ -45,7 +45,7 @@ export async function postAttemptSignIn(loginCredentials: LoginCredentials): Pro
 }
 
 export async function postSignOut(): Promise<boolean> {
-    return await userAuthorizedRequest(`http://localhost:4010/api/users/sign_out`,
+    return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/sign_out`,
         "post",
     ).then((response) => {
         return response.ok;
@@ -53,23 +53,8 @@ export async function postSignOut(): Promise<boolean> {
 
 }
 
-export async function getHealthCheck(): Promise<boolean> {
-    return await userAuthorizedRequest(`http://localhost:4010/api/users/health`,
-        "get",
-    ).then((response) => {
-        var result: boolean = false;
-
-        if (response)
-        {
-            result = response.ok;
-        }
-
-        return result;
-        });
-}
-
 export async function getSelf(): Promise<User|null> {
-    return await userAuthorizedRequest(`http://localhost:4010/api/users/self`,
+    return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/self`,
         "get",
     ).then(async (response) => {
         var result: User|null = null;
@@ -83,7 +68,7 @@ export async function getSelf(): Promise<User|null> {
 }
 
 export async function getUser(userId: string): Promise<User> {
-    return await userAuthorizedRequest(`http://localhost:4010/api/users/${userId}`,
+    return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/${userId}`,
         "get",
     ).then((response) => {
         return getResponseBody<User>(response);

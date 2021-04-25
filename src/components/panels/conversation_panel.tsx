@@ -14,6 +14,8 @@ import { Socket } from "phoenix";
 import { joinChannel, newChannel, sayHello } from "../../services/channel/channel_handler";
 import { initSocket } from "../../services/channel/socket_handler";
 import { postMessageCreate } from "../../services/api/conversation/message_requests";
+import { userCacheloadUser } from "../../services/users/users_cache";
+import { ConversationPackage } from "../../types/conversation/conversation_package";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     panelGridContainer: {
@@ -32,42 +34,25 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 
 export type ConversationPanelProps = {
     currentUser: User;
-    conversations: Conversation[];
+    conversationPackages: ConversationPackage[];
     onNewConversation: (conversation: Conversation) => void;
     onNewMessage: (conversation: Conversation, message: Message) => void;
     loadUser: (userId: string) => Promise<User>;
 }
 
-export function ConversationPanel({ currentUser, conversations, onNewConversation, onNewMessage, loadUser }: ConversationPanelProps): JSX.Element {
+export function ConversationPanel({ currentUser, conversationPackages, onNewConversation, onNewMessage, loadUser }: ConversationPanelProps): JSX.Element {
     const classes = useStyles();
-    const [selectedConversation, setSelectedConversation] = useState<Conversation>();
+    const [selectedConversationPackage, setSelectedConversationPackage] = useState<ConversationPackage>();
 
-    async function getConversationUsers(conversation: Conversation): Promise<{ [id: string]: User }> {
-        var users: { [id: string]: User } = {};
-
-        if (conversation) {
-            conversation.user_ids.map(async (userId) => {
-                if (userId == currentUser.id) {
-                    users[currentUser.id] = currentUser;
-                }
-                else {
-                    users[userId] = await loadUser(userId);
-                }
-            });
-        }
-
-        return users;
+    function onConversationPackageSelected(selectedConversationPackage: ConversationPackage): void {
+        setSelectedConversationPackage(selectedConversationPackage);
     }
 
-    function onConversationSelected(selectedConversation: Conversation): void {
-        setSelectedConversation(selectedConversation);
-    }
-
-    function onNewMessageContent(selectedConversation: Conversation, messageContent: string) : void {
+    function onNewMessageContent(selectedConversationPackage: ConversationPackage, messageContent: string) : void {
         var newMessage: Message = { id: null, user_id: currentUser.id, content: messageContent };
 
-        postMessageCreate(selectedConversation.id, newMessage).then(message => {
-            onNewMessage(selectedConversation, message);
+        postMessageCreate(selectedConversationPackage.conversation.id, newMessage).then(message => {
+            onNewMessage(selectedConversationPackage.conversation, message);
         })
     }
 
@@ -75,10 +60,10 @@ export function ConversationPanel({ currentUser, conversations, onNewConversatio
         <>
             <Grid container className={classes.panelGridContainer}>
                 <Grid item container className={classes.panelGridItem} md={3}>
-                    <ConversationSelectionPanel conversations={conversations} onNewConversation={onNewConversation} onConversationSelected={onConversationSelected} />
+                    <ConversationSelectionPanel conversationPackages={conversationPackages} onNewConversation={onNewConversation} onConversationPackageSelected={onConversationPackageSelected} />
                 </Grid>
                 <Grid item container className={classes.panelGridItem} md={9}>
-                    <ConversationViewPanel conversation={selectedConversation} loadUsers={() => getConversationUsers(selectedConversation)} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversation, messageContent)} />
+                    <ConversationViewPanel conversationPackage={selectedConversationPackage} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversationPackage, messageContent)} />
                 </Grid>
             </Grid>
         </>

@@ -12,7 +12,7 @@ import { ConversationCreateRequest } from "./types/conversation_create_request";
 
 export async function postMessageCreate(conversationId : string, message: Message): Promise<Message> {
 
-    return await userAuthorizedRequest(`http://localhost:4010/api/conversations/${conversationId}/messages`,
+    return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/conversations/${conversationId}/messages`,
         "post",
         {
             headers: {"Content-Type": "application/json"},

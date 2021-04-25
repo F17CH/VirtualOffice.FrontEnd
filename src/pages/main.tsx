@@ -9,7 +9,9 @@ import { joinChannel } from "../services/channel/channel_handler";
 import { newConversationChannel } from "../services/channel/conversation_channel_handler";
 import { initSocket } from "../services/channel/socket_handler";
 import { newUserChannel } from "../services/channel/user_channel_handler";
+import { userCacheCurrentUser, userCacheloadUser } from "../services/users/users_cache";
 import { Conversation } from "../types/conversation/conversation";
+import { ConversationPackage } from "../types/conversation/conversation_package";
 import { Message } from "../types/conversation/message";
 import { LoginCredentials } from "../types/login_credentials";
 import { User } from "../types/user";
@@ -43,6 +45,7 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
     }
 
     function userChannelInit(): void {
+        userCacheCurrentUser(currentUser);
         var userChannel = newUserChannel(currentUser.id);
 
         userChannel.on("conversation_new", async (response) => {
@@ -53,56 +56,37 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
         joinChannel(userChannel);
     }
 
-    const [conversations, setConversations] = useState<Conversation[]>([]);
+    const [conversationPackages, setConversationPackages] = useState<ConversationPackage[]>([]);
 
-    function onNewConversation(newConversation: Conversation): void {
-        var conversationChannel = newConversationChannel(newConversation.id);
+    async function onNewConversation(newConversation: Conversation): Promise<void> {
+        newConversationChannel(newConversation, currentUser, onNewMessage);
 
-        conversationChannel.on("message_new", async (response) => {
-            var newMessage: Message = response.data;
+        var newConversationPackage: ConversationPackage = { conversation: newConversation, users: {} }
 
-            if (newMessage.user_id != currentUser.id) {
-                onNewMessage(newConversation, newMessage);
-            }
+        newConversation.user_ids.map(async (userId) => {
+            newConversationPackage.users[userId] = await userCacheloadUser(userId);
         });
 
-        joinChannel(conversationChannel);
-
-        setConversations((prevState: Conversation[]) => [...prevState, newConversation]);
+        setConversationPackages((prevState: ConversationPackage[]) => [...prevState, newConversationPackage]);
     }
 
     function onNewMessage(currentConversation: Conversation, newMessage: Message): void {
-        setConversations((prevState) => {
-            var convIndex = prevState.findIndex(conv => conv == currentConversation);
+        setConversationPackages((prevState) => {
+            var convIndex = prevState.findIndex(convPackage => convPackage.conversation == currentConversation);
             currentConversation.messages.push(newMessage);
-            prevState[convIndex] = currentConversation;
+            prevState[convIndex].conversation = currentConversation;
             return [...prevState];
         });
     }
 
-    const loadedUsers: { [id: string]: User } = {};
-
     async function loadUser(userId: string): Promise<User> {
-        var user: User = null;
-
-        if (userId == currentUser.id) {
-            user = currentUser;
-        }
-        else if (loadedUsers[userId]) {
-            user = loadedUsers[userId];
-        }
-        else {
-            user = await getUser(userId);
-            loadedUsers[userId] = user;
-        }
-
-        return user;
+        return await userCacheloadUser(userId);
     }
 
     return (
         <>
             <Grid item className={classes.mainContainer} md={9}>
-                <ConversationPanel currentUser={currentUser} conversations={conversations} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={loadUser} />
+                <ConversationPanel currentUser={currentUser} conversationPackages={conversationPackages} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={loadUser} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
                 <DataPanel user={currentUser} onLogout={onLogout} />

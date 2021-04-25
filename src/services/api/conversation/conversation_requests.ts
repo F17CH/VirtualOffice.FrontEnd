@@ -11,7 +11,7 @@ import { ConversationCreateRequest } from "./types/conversation_create_request";
 
 export async function postConversationCreate(conversationCreateRequest : ConversationCreateRequest): Promise<Conversation> {
     debugger;
-    return await userAuthorizedRequest(`${process.env.BACKEND_URL}/conversations/`,
+    return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/conversations/`,
         "post",
         {
             headers: {"Content-Type": "application/json"},

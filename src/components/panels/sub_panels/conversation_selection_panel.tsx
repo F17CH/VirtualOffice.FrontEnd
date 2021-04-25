@@ -4,6 +4,7 @@ import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@ma
 import { Conversation } from "../../../types/conversation/conversation";
 import { ConversationMenuBox } from "../../conversation/conversation_menu_box";
 import { NewConversationMenuBox } from "../../conversation/new_conversation_box";
+import { ConversationPackage } from "../../../types/conversation/conversation_package";
 
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
@@ -14,19 +15,19 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 })));
 
 export type ConversationSelectionPanelProps = {
-    conversations : Conversation[];
+    conversationPackages : ConversationPackage[];
     onNewConversation : (newConversation : Conversation) => void;
-    onConversationSelected : (selectedConversation : Conversation) => void;
+    onConversationPackageSelected : (selectedConversationPackage : ConversationPackage) => void;
 }
 
-export function ConversationSelectionPanel({conversations, onNewConversation, onConversationSelected}: ConversationSelectionPanelProps): JSX.Element {
+export function ConversationSelectionPanel({conversationPackages, onNewConversation, onConversationPackageSelected}: ConversationSelectionPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
         <>
             <NewConversationMenuBox onNewConversation={onNewConversation} />
-            {conversations.map((conversation, index) => (
-                <ConversationMenuBox conversation={conversation} onClick={() => onConversationSelected(conversation)} key={conversation.id} />
+            {conversationPackages.map((conversationPackage, index) => (
+                <ConversationMenuBox conversation={conversationPackage.conversation} onClick={() => onConversationPackageSelected(conversationPackage)} key={index} />
             ))}
             <Paper className={classes.panelTopCover} square />
         </>

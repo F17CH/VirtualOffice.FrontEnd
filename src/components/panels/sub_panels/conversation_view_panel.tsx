@@ -8,6 +8,8 @@ import { MessageInput } from "../../conversation/message_input";
 import { MessageRow } from "../../conversation/message_row";
 import { User } from "../../../types/user";
 import { Message } from "../../../types/conversation/message";
+import { userCacheloadUser } from "../../../services/users/users_cache";
+import { ConversationPackage } from "../../../types/conversation/conversation_package";
 
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
@@ -24,31 +26,23 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 })));
 
 export type ConversationViewPanelProps = {
-    conversation: Conversation
-    loadUsers: () => Promise<{ [id: string]: User }>;
+    conversationPackage: ConversationPackage
     onNewMessageContent: (messageContent: string) => void
 }
 
-export function ConversationViewPanel({ conversation, loadUsers, onNewMessageContent }: ConversationViewPanelProps): JSX.Element {
+export function ConversationViewPanel({ conversationPackage, onNewMessageContent }: ConversationViewPanelProps): JSX.Element {
     const classes = useStyles();
-    const [users, setUsers] = useState<{ [id: string]: User }>(null);
-
-    useEffect(function (): void {
-        (async function (): Promise<void> {
-            setUsers(await loadUsers());
-        })();
-    }, [conversation]);
 
     return (
         <>
             <Grid container className={classes.backPanel}>
                 <Paper className={classes.conversationPanel} square>
-                    {conversation && users ? (
+                    {conversationPackage ? (
                         <>
-                            <Typography>{conversation.id}</Typography>
+                            <Typography>{conversationPackage.conversation.id}</Typography>
                             <>
-                                {conversation.messages.map((message, index) => (
-                                    <MessageRow message={message} user={users[message.user_id]} key={message.id} />
+                                {conversationPackage.conversation.messages.map((message, index) => (
+                                    <MessageRow message={message} user={conversationPackage.users[message.user_id]} key={message.id} />
                                 ))}
                             </>
                             <MessageInput onNewMessageContent={onNewMessageContent} />
