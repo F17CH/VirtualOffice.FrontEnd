@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Button, Grid, MenuItem, Paper, Select, TextField, Toolbar, Typography } from "@material-ui/core";
 import { User } from "../../types/user";
 import { LoginCredentials } from "../../types/login_credentials";
+import { Association } from "../../types/group/association";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     userBox: {
@@ -22,6 +23,8 @@ export type UserBoxProps = {
 
 export function UserBox({user, onLogout}: UserBoxProps): JSX.Element {
     const classes = useStyles();
+
+
 
     return (<Paper className={classes.userBox} square>
         {user ? (

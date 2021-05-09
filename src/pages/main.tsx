@@ -4,7 +4,6 @@ import { LoginBox } from "../components/login/login_box";
 import { ConversationPanel } from "../components/panels/conversation_panel";
 import { DataPanel } from "../components/panels/data_panel";
 import { UserBox } from "../components/user/user_box";
-import { getSelf, getUser, postAttemptSignIn } from "../services/api/user/user_requests";
 import { joinChannel } from "../services/channel/channel_handler";
 import { newConversationChannel } from "../services/channel/conversation_channel_handler";
 import { initSocket } from "../services/channel/socket_handler";
@@ -13,6 +12,7 @@ import { userCacheCurrentUser, userCacheloadUser } from "../services/users/users
 import { Conversation } from "../types/conversation/conversation";
 import { ConversationPackage } from "../types/conversation/conversation_package";
 import { Message } from "../types/conversation/message";
+import { Association } from "../types/group/association";
 import { LoginCredentials } from "../types/login_credentials";
 import { User } from "../types/user";
 
@@ -41,7 +41,6 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
     function userInit(): void {
         initSocket();
         userChannelInit();
-
     }
 
     function userChannelInit(): void {
@@ -79,6 +78,12 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
         });
     }
 
+    const [currentAssociation, setCurrentAssociation] = useState<Association>(null);
+
+    function onCurrentAssociationChange(newCurrentAssociation: Association): void {
+        setCurrentAssociation(newCurrentAssociation);
+    }
+
     async function loadUser(userId: string): Promise<User> {
         return await userCacheloadUser(userId);
     }
@@ -89,7 +94,7 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
                 <ConversationPanel currentUser={currentUser} conversationPackages={conversationPackages} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={loadUser} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
-                <DataPanel user={currentUser} onLogout={onLogout} />
+                <DataPanel currentUser={currentUser} onLogout={onLogout} currentAssociation={currentAssociation} onCurrentAssociationChange={onCurrentAssociationChange} />
             </Grid>
         </>
     )

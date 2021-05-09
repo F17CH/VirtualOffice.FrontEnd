@@ -53,8 +53,8 @@ export async function postSignOut(): Promise<boolean> {
 
 }
 
-export async function getSelf(): Promise<User|null> {
-    return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/self`,
+export async function getCurrentUser(): Promise<User|null> {
+    return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/current`,
         "get",
     ).then(async (response) => {
         var result: User|null = null;

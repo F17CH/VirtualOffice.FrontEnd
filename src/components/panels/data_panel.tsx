@@ -4,6 +4,8 @@ import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@ma
 import { User } from "../../types/user";
 import { LoginCredentials } from "../../types/login_credentials";
 import { UserBox } from "../user/user_box";
+import { Association } from "../../types/group/association";
+import { AssociationPanel } from "./sub_panels/association_panel";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     panelGridContainer: {
@@ -21,19 +23,22 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 })));
 
 export type DataPanelProps = {
-    user: User;
+    currentUser: User;
     onLogout: () => void;
+    currentAssociation: Association;
+    onCurrentAssociationChange: (newCurrentAssociation: Association) => void;
 }
 
-export function DataPanel({ user, onLogout }: DataPanelProps): JSX.Element {
+export function DataPanel({ currentUser, onLogout, currentAssociation, onCurrentAssociationChange }: DataPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
         <>
             <Grid container className={classes.panelGridContainer}>
                 <Grid item container className={classes.panelGridItem} md={12}>
+                    <AssociationPanel currentUser={currentUser} currentAssociation={currentAssociation} onCurrentAssociationChange={onCurrentAssociationChange} />
                     <Paper className={classes.panelCover} square />
-                    <UserBox user={user} onLogout={onLogout} />
+                    <UserBox user={currentUser} onLogout={onLogout} />
                 </Grid>
             </Grid>
         </>

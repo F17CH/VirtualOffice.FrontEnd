@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Grid, Paper, Toolbar, Typography } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import { TitleBar } from "../components/shell/title_bar";
 import { Login } from "./login";
 import { Main } from "./main";
-import { deleteUserToken, getUserToken } from "../services/user_token_manager";
-import { getHealthCheck, getSelf, postSignOut } from "../services/api/user/user_requests";
+import { deleteUserToken } from "../services/user_token_manager";
+import { getCurrentUser, postSignOut } from "../services/api/user/user_requests";
 import { User } from "../types/user";
-import { initSocket } from "../services/channel/socket_handler";
-import { joinChannel, newChannel } from "../services/channel/channel_handler";
-import { newUserChannel } from "../services/channel/user_channel_handler";
 
 type StyleProps =
     {
@@ -57,7 +54,7 @@ export function Shell(): JSX.Element {
     }
 
     async function attemptLoginUser(): Promise<void> {
-        getSelf().then((user) => {
+        getCurrentUser().then((user) => {
             if (user) {
                 setCurrentUser(user)
             }
