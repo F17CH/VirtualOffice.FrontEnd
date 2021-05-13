@@ -1,5 +1,6 @@
 import { LoginCredentials } from "../../../types/login_credentials";
 import { LoginResult } from "../../../types/login_result";
+import { SessionUser } from "../../../types/session_user";
 import { User } from "../../../types/user";
 import { setUserToken } from "../../user_token_manager";
 import { getResponseBody } from "../api_utils";
@@ -53,14 +54,14 @@ export async function postSignOut(): Promise<boolean> {
 
 }
 
-export async function getCurrentUser(): Promise<User|null> {
+export async function getCurrentUser(): Promise<SessionUser|null> {
     return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/current`,
         "get",
     ).then(async (response) => {
-        var result: User|null = null;
+        var result: SessionUser|null = null;
 
         if (response) {
-            result = await getResponseBody<User>(response);
+            result = await getResponseBody<SessionUser>(response);
         }
 
         return result;

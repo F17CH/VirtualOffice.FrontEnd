@@ -7,6 +7,7 @@ import { Main } from "./main";
 import { deleteUserToken } from "../services/user_token_manager";
 import { getCurrentUser, postSignOut } from "../services/api/user/user_requests";
 import { User } from "../types/user";
+import { SessionUser } from "../types/session_user";
 
 type StyleProps =
     {
@@ -33,7 +34,7 @@ export function Shell(): JSX.Element {
     const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight };
     const classes = useStyles(styleProps);
 
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
 
     useEffect(function (): void {
         (async function (): Promise<void> {
@@ -49,14 +50,14 @@ export function Shell(): JSX.Element {
         await postSignOut().then(() => {
 
             deleteUserToken();
-            setCurrentUser(null);
+            setSessionUser(null);
         });
     }
 
     async function attemptLoginUser(): Promise<void> {
-        getCurrentUser().then((user) => {
-            if (user) {
-                setCurrentUser(user)
+        getCurrentUser().then((sessionUser) => {
+            if (sessionUser) {
+                setSessionUser(sessionUser)
             }
         });
     }
@@ -66,8 +67,8 @@ export function Shell(): JSX.Element {
             <TitleBar titleBarHeight={titleBarHeight} />
             <div className={classes.shellBody}>
                 <Grid container direction="row" className={classes.container} spacing={0}>
-                    {currentUser ? (
-                        <Main currentUser={currentUser} onLogout={onLogout} />
+                    {sessionUser ? (
+                        <Main sessionUser={sessionUser} onLogout={onLogout} />
                     ) : (
                         <Login onLogin={onLogin} />
                     )}

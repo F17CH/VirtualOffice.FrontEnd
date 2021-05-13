@@ -24,15 +24,16 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 
 export type AssociationPanellProps = {
     currentUser: User;
+    associations: { [associationId: string]: Association };
     currentAssociation: Association;
     onCurrentAssociationChange: (newCurrentAssociation: Association) => void;
 }
 
-export function AssociationPanel({ currentUser, currentAssociation, onCurrentAssociationChange }: AssociationPanellProps): JSX.Element {
+export function AssociationPanel({ currentUser, associations, currentAssociation, onCurrentAssociationChange }: AssociationPanellProps): JSX.Element {
     const classes = useStyles();
 
     function setAssociation(associationId: string): void {
-        onCurrentAssociationChange(currentUser.associations.find((association) => association.id == associationId));
+        onCurrentAssociationChange(associations[associationId]);
     }
 
     return (
@@ -45,13 +46,13 @@ export function AssociationPanel({ currentUser, currentAssociation, onCurrentAss
                             value={currentAssociation ? currentAssociation.id : "-1"}
                             onChange={(event) => setAssociation(event.target.value as string)} >
                             <MenuItem key={-1} value={"-1"}> No Association Selected</MenuItem>
-                            {currentUser.associations.map((association: Association, index) => (
-                                <MenuItem key={index} value={association.id}> {association.name}</MenuItem>
+                            {Object.keys(associations).map(id => (
+                                <MenuItem key={id} value={id}> {associations[id].name}</MenuItem>
                             ))}
                         </Select>
                         {currentAssociation ? (
                             currentAssociation.members.map((member: Member, index) => (
-                                <p> {member.user.firstName + " " + member.user.lastName + " - " + member.role} </p>
+                                <p key={index}> {member.user.firstName + " " + member.user.lastName + " - " + member.role} </p>
                             ))
                         ) : (
                             <>

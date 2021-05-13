@@ -11,9 +11,11 @@ import { newUserChannel } from "../services/channel/user_channel_handler";
 import { userCacheCurrentUser, userCacheloadUser } from "../services/users/users_cache";
 import { Conversation } from "../types/conversation/conversation";
 import { ConversationPackage } from "../types/conversation/conversation_package";
+import { IndividualConversation } from "../types/conversation/individual_conversation";
 import { Message } from "../types/conversation/message";
 import { Association } from "../types/group/association";
 import { LoginCredentials } from "../types/login_credentials";
+import { SessionUser } from "../types/session_user";
 import { User } from "../types/user";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
@@ -25,20 +27,34 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 })));
 
 export type MainProps = {
-    currentUser: User;
+    sessionUser: SessionUser;
     onLogout: () => void;
 }
 
-export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
+export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
     const classes = useStyles();
+
+    const [currentUser, setCurrentUser] = useState<User>(null);
+
+    const [associations, setAssociations] = useState<{ [associationId: string]:  Association }>({});
+    const [currentAssociation, setCurrentAssociation] = useState<Association>(null);
+
+    const [individualConversations, setIndividualConversations] = useState<{ [userId: string]:  IndividualConversation }>({});
+    const [currentConversation, setCurrentConversation] = useState<Conversation>(null);
 
     useEffect(function (): void {
         (async function (): Promise<void> {
             userInit();
         })();
-    }, [currentUser]);
+    }, [sessionUser]);
 
     function userInit(): void {
+        var newCurrentUser : User = sessionUser;
+        setCurrentUser(newCurrentUser);
+
+        setAssociations(sessionUser.associations);
+        setIndividualConversations(sessionUser.individualConversations)
+
         initSocket();
         userChannelInit();
     }
@@ -78,7 +94,7 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
         });
     }
 
-    const [currentAssociation, setCurrentAssociation] = useState<Association>(null);
+
 
     function onCurrentAssociationChange(newCurrentAssociation: Association): void {
         setCurrentAssociation(newCurrentAssociation);
@@ -94,7 +110,7 @@ export function Main({ currentUser, onLogout }: MainProps): JSX.Element {
                 <ConversationPanel currentUser={currentUser} conversationPackages={conversationPackages} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={loadUser} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
-                <DataPanel currentUser={currentUser} onLogout={onLogout} currentAssociation={currentAssociation} onCurrentAssociationChange={onCurrentAssociationChange} />
+                <DataPanel currentUser={currentUser} onLogout={onLogout} associations={associations} currentAssociation={currentAssociation} onCurrentAssociationChange={onCurrentAssociationChange} />
             </Grid>
         </>
     )
