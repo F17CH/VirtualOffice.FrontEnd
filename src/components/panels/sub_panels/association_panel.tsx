@@ -24,16 +24,17 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 
 export type AssociationPanellProps = {
     currentUser: User;
-    associations: { [associationId: string]: Association };
-    currentAssociation: Association;
-    onCurrentAssociationChange: (newCurrentAssociation: Association) => void;
+    users: { [userId: string]:  User };
+    associations: { [associationId: string]:  Association };
+    selectedAssociation: Association;
+    onSelectedAssociationChange: (newSelectedAssociation: Association) => void;
 }
 
-export function AssociationPanel({ currentUser, associations, currentAssociation, onCurrentAssociationChange }: AssociationPanellProps): JSX.Element {
+export function AssociationPanel({ currentUser, users, associations, selectedAssociation, onSelectedAssociationChange }: AssociationPanellProps): JSX.Element {
     const classes = useStyles();
 
     function setAssociation(associationId: string): void {
-        onCurrentAssociationChange(associations[associationId]);
+        onSelectedAssociationChange(associations[associationId]);
     }
 
     return (
@@ -43,16 +44,16 @@ export function AssociationPanel({ currentUser, associations, currentAssociation
                     <Paper className={classes.associationPanel} square>
                         <Select
                             className={classes.associationItem}
-                            value={currentAssociation ? currentAssociation.id : "-1"}
+                            value={selectedAssociation ? selectedAssociation.id : "-1"}
                             onChange={(event) => setAssociation(event.target.value as string)} >
                             <MenuItem key={-1} value={"-1"}> No Association Selected</MenuItem>
                             {Object.keys(associations).map(id => (
                                 <MenuItem key={id} value={id}> {associations[id].name}</MenuItem>
                             ))}
                         </Select>
-                        {currentAssociation ? (
-                            currentAssociation.members.map((member: Member, index) => (
-                                <p key={index}> {member.user.firstName + " " + member.user.lastName + " - " + member.role} </p>
+                        {selectedAssociation ? (
+                            selectedAssociation.members.map((member: Member, index) => (
+                                <p key={index}> {users[member.user.id].firstName + " " + users[member.user.id].lastName + " - " + member.role} </p>
                             ))
                         ) : (
                             <>

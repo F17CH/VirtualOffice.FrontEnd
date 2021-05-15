@@ -6,6 +6,6 @@ export type SessionUser = {
     email: string;
     firstName: string;
     lastName: string;
-    associations: { [associationId: string]:  Association };
+    associations: Association[];
     individualConversations: { [userId: string]: IndividualConversation };
 }

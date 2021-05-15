@@ -35,12 +35,13 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
     const classes = useStyles();
 
     const [currentUser, setCurrentUser] = useState<User>(null);
+    const [users, setUsers] = useState<{ [userId: string]: User }>({});
 
-    const [associations, setAssociations] = useState<{ [associationId: string]:  Association }>({});
-    const [currentAssociation, setCurrentAssociation] = useState<Association>(null);
+    const [associations, setAssociations] = useState<{ [associationId: string]: Association }>({});
+    const [selectedAssociation, setSelectedAssociation] = useState<Association>(null);
 
-    const [individualConversations, setIndividualConversations] = useState<{ [userId: string]:  IndividualConversation }>({});
-    const [currentConversation, setCurrentConversation] = useState<Conversation>(null);
+    const [individualConversations, setIndividualConversations] = useState<{ [userId: string]: IndividualConversation }>({});
+    const [selectedConversation, setSelectedConversation] = useState<Conversation>(null);
 
     useEffect(function (): void {
         (async function (): Promise<void> {
@@ -49,10 +50,10 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
     }, [sessionUser]);
 
     function userInit(): void {
-        var newCurrentUser : User = sessionUser;
+        var newCurrentUser: User = sessionUser;
         setCurrentUser(newCurrentUser);
 
-        setAssociations(sessionUser.associations);
+        loadAssociations(sessionUser.associations);
         setIndividualConversations(sessionUser.individualConversations)
 
         initSocket();
@@ -60,8 +61,7 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
     }
 
     function userChannelInit(): void {
-        userCacheCurrentUser(currentUser);
-        var userChannel = newUserChannel(currentUser.id);
+        var userChannel = newUserChannel(sessionUser.id);
 
         userChannel.on("conversation_new", async (response) => {
             var newConversation: Conversation = response.data;
@@ -69,6 +69,33 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
         })
 
         joinChannel(userChannel);
+    }
+
+    function loadAssociations(newAssociations: Association[]): void {
+        var newUsers : User[] = [];
+
+        setAssociations((prevState) => {
+            newAssociations.map((association, _) => {
+                association.members.map((member, _) => {
+                    newUsers.push(member.user);
+                });
+                prevState[association.id] = association;
+            });
+
+            loadUsers(newUsers);
+
+            return { ...prevState }
+        });
+    }
+
+    function loadUsers(newUsers: User[]): void {
+        setUsers((prevState) => {
+            newUsers.map((user, _) => {
+                prevState[user.id] = user;
+            });
+
+            return { ...prevState }
+        });
     }
 
     const [conversationPackages, setConversationPackages] = useState<ConversationPackage[]>([]);
@@ -96,21 +123,21 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
 
 
 
-    function onCurrentAssociationChange(newCurrentAssociation: Association): void {
-        setCurrentAssociation(newCurrentAssociation);
+    function onSelectedAssociationChange(newSelectedAssociation: Association): void {
+        setSelectedAssociation(newSelectedAssociation);
     }
 
-    async function loadUser(userId: string): Promise<User> {
-        return await userCacheloadUser(userId);
-    }
+    //async function loadUser(userId: string): Promise<User> {
+    //   return await userCacheloadUser(userId);
+    //}
 
     return (
         <>
             <Grid item className={classes.mainContainer} md={9}>
-                <ConversationPanel currentUser={currentUser} conversationPackages={conversationPackages} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={loadUser} />
+                <ConversationPanel currentUser={currentUser} conversationPackages={conversationPackages} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={null} selectedAssociation={selectedAssociation} users={users} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
-                <DataPanel currentUser={currentUser} onLogout={onLogout} associations={associations} currentAssociation={currentAssociation} onCurrentAssociationChange={onCurrentAssociationChange} />
+                <DataPanel currentUser={currentUser} users={users} onLogout={onLogout} associations={associations} selectedAssociation={selectedAssociation} onSelectedAssociationChange={onSelectedAssociationChange} />
             </Grid>
         </>
     )

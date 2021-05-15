@@ -25,19 +25,20 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 export type DataPanelProps = {
     currentUser: User;
     onLogout: () => void;
+    users: { [userId: string]:  User };
     associations: { [associationId: string]:  Association };
-    currentAssociation: Association;
-    onCurrentAssociationChange: (newCurrentAssociation: Association) => void;
+    selectedAssociation: Association;
+    onSelectedAssociationChange: (newSelectedAssociation: Association) => void;
 }
 
-export function DataPanel({ currentUser, onLogout, associations, currentAssociation, onCurrentAssociationChange }: DataPanelProps): JSX.Element {
+export function DataPanel({ currentUser, onLogout, users, associations, selectedAssociation, onSelectedAssociationChange }: DataPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
         <>
             <Grid container className={classes.panelGridContainer}>
                 <Grid item container className={classes.panelGridItem} md={12}>
-                    <AssociationPanel currentUser={currentUser} associations={associations} currentAssociation={currentAssociation} onCurrentAssociationChange={onCurrentAssociationChange} />
+                    <AssociationPanel currentUser={currentUser} users={users} associations={associations} selectedAssociation={selectedAssociation} onSelectedAssociationChange={onSelectedAssociationChange} />
                     <Paper className={classes.panelCover} square />
                     <UserBox user={currentUser} onLogout={onLogout} />
                 </Grid>

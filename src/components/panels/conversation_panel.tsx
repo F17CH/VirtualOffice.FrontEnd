@@ -7,7 +7,6 @@ import { UserBox } from "../user/user_box";
 import { NewConversationMenuBox } from "../conversation/new_conversation_box";
 import { Conversation } from "../../types/conversation/conversation";
 import { ConversationMenuBox } from "../conversation/conversation_menu_box";
-import { ConversationSelectionPanel } from "./sub_panels/conversation_selection_panel";
 import { ConversationViewPanel } from "./sub_panels/conversation_view_panel";
 import { Message } from "../../types/conversation/message";
 import { Socket } from "phoenix";
@@ -16,6 +15,9 @@ import { initSocket } from "../../services/channel/socket_handler";
 import { postMessageCreate } from "../../services/api/conversation/message_requests";
 import { userCacheloadUser } from "../../services/users/users_cache";
 import { ConversationPackage } from "../../types/conversation/conversation_package";
+import { UserSelectionBox } from "../group/user_selection_box";
+import { UserSelectionPanel } from "./sub_panels/user_selection_panel";
+import { Association } from "../../types/group/association";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     panelGridContainer: {
@@ -38,9 +40,11 @@ export type ConversationPanelProps = {
     onNewConversation: (conversation: Conversation) => void;
     onNewMessage: (conversation: Conversation, message: Message) => void;
     loadUser: (userId: string) => Promise<User>;
+    users: { [userId: string]:  User };
+    selectedAssociation: Association;
 }
 
-export function ConversationPanel({ currentUser, conversationPackages, onNewConversation, onNewMessage, loadUser }: ConversationPanelProps): JSX.Element {
+export function ConversationPanel({ currentUser, conversationPackages, onNewConversation, onNewMessage, loadUser, users, selectedAssociation }: ConversationPanelProps): JSX.Element {
     const classes = useStyles();
     const [selectedConversationPackage, setSelectedConversationPackage] = useState<ConversationPackage>();
 
@@ -60,7 +64,7 @@ export function ConversationPanel({ currentUser, conversationPackages, onNewConv
         <>
             <Grid container className={classes.panelGridContainer}>
                 <Grid item container className={classes.panelGridItem} md={3}>
-                    <ConversationSelectionPanel conversationPackages={conversationPackages} onNewConversation={onNewConversation} onConversationPackageSelected={onConversationPackageSelected} />
+                    <UserSelectionPanel currentUser={currentUser} selectedAssociation={selectedAssociation} users={users}  />
                 </Grid>
                 <Grid item container className={classes.panelGridItem} md={9}>
                     <ConversationViewPanel conversationPackage={selectedConversationPackage} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversationPackage, messageContent)} />
