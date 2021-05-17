@@ -16,13 +16,3 @@ export function joinChannel(channel: Channel): void {
     .receive('ok', resp => { console.log("Joined successfully!", resp) })
     .receive('error', resp => { console.log("Unable to join", resp) })
 }
-
-export function sayHello(channel: Channel, greeting: string): void {
-  channel.push("hello", {"message": greeting})
-    .receive("ok", response => {
-      console.log("Hello", response.message)
-    })
-    .receive("error", response => {
-      console.log("unable to say hello to the channel.", response.message)
-    });
-}

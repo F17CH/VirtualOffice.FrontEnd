@@ -16,6 +16,8 @@ export function newConversationChannel(
     var newMessage: Message = response.data;
 
     if (newMessage.userId != currentUser.id) {
+      console.log(newMessage)
+      console.log(currentUser.id)
       onNewMessage(conversation, newMessage);
     }
   });

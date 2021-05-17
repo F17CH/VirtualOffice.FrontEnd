@@ -10,7 +10,6 @@ import { ConversationMenuBox } from "../conversation/conversation_menu_box";
 import { ConversationViewPanel } from "./sub_panels/conversation_view_panel";
 import { Message } from "../../types/conversation/message";
 import { Socket } from "phoenix";
-import { joinChannel, newChannel, sayHello } from "../../services/channel/channel_handler";
 import { initSocket } from "../../services/channel/socket_handler";
 import { postMessageCreate } from "../../services/api/conversation/message_requests";
 import { userCacheloadUser } from "../../services/users/users_cache";

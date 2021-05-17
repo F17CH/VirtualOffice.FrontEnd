@@ -54,12 +54,12 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
         var newCurrentUser: User = sessionUser;
         setCurrentUser(newCurrentUser);
 
+        initSocket();
+        userChannelInit();
+
         loadUsers([newCurrentUser]);
         loadAssociations(sessionUser.associations, newCurrentUser);
         loadConversations(sessionUser.individualConversations, newCurrentUser)
-
-        initSocket();
-        userChannelInit();
     }
 
     function userChannelInit(): void {
@@ -121,6 +121,14 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
 
             return { ...prevState }
         });
+
+        newIndividualConversations.map((conversation, _) => {
+            initConversation(conversation, currentUser);
+        });
+    }
+
+     function initConversation(newConversation: Conversation, currentUser: User): void {
+        newConversationChannel(newConversation, currentUser, onNewMessage)
     }
 
     function loadUsers(newUsers: User[]): void {
