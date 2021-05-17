@@ -15,7 +15,7 @@ export function newConversationChannel(
   newConversationChannel.on("message_new", async (response) => {
     var newMessage: Message = response.data;
 
-    if (newMessage.user_id != currentUser.id) {
+    if (newMessage.userId != currentUser.id) {
       onNewMessage(conversation, newMessage);
     }
   });

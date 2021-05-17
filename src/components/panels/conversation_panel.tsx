@@ -36,27 +36,21 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 
 export type ConversationPanelProps = {
     currentUser: User;
-    conversationPackages: ConversationPackage[];
-    onNewConversation: (conversation: Conversation) => void;
+    selectedConversation: Conversation;
     onNewMessage: (conversation: Conversation, message: Message) => void;
-    loadUser: (userId: string) => Promise<User>;
     users: { [userId: string]:  User };
+    onSelectedUserChange: (newSelectedUser: User) => void;
     selectedAssociation: Association;
 }
 
-export function ConversationPanel({ currentUser, conversationPackages, onNewConversation, onNewMessage, loadUser, users, selectedAssociation }: ConversationPanelProps): JSX.Element {
+export function ConversationPanel({ currentUser, selectedConversation, onNewMessage, users, onSelectedUserChange, selectedAssociation }: ConversationPanelProps): JSX.Element {
     const classes = useStyles();
-    const [selectedConversationPackage, setSelectedConversationPackage] = useState<ConversationPackage>();
 
-    function onConversationPackageSelected(selectedConversationPackage: ConversationPackage): void {
-        setSelectedConversationPackage(selectedConversationPackage);
-    }
+    function onNewMessageContent(selectedConversation: Conversation, messageContent: string) : void {
+        var newMessage: Message = { id: null, userId: currentUser.id, content: messageContent };
 
-    function onNewMessageContent(selectedConversationPackage: ConversationPackage, messageContent: string) : void {
-        var newMessage: Message = { id: null, user_id: currentUser.id, content: messageContent };
-
-        postMessageCreate(selectedConversationPackage.conversation.id, newMessage).then(message => {
-            onNewMessage(selectedConversationPackage.conversation, message);
+        postMessageCreate(selectedConversation.id, newMessage).then(message => {
+            onNewMessage(selectedConversation, message);
         })
     }
 
@@ -64,10 +58,10 @@ export function ConversationPanel({ currentUser, conversationPackages, onNewConv
         <>
             <Grid container className={classes.panelGridContainer}>
                 <Grid item container className={classes.panelGridItem} md={3}>
-                    <UserSelectionPanel currentUser={currentUser} selectedAssociation={selectedAssociation} users={users}  />
+                    <UserSelectionPanel currentUser={currentUser} selectedAssociation={selectedAssociation} users={users} onSelectedUserChange={onSelectedUserChange}  />
                 </Grid>
                 <Grid item container className={classes.panelGridItem} md={9}>
-                    <ConversationViewPanel conversationPackage={selectedConversationPackage} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversationPackage, messageContent)} />
+                    <ConversationViewPanel selectedConversation={selectedConversation} onNewMessageContent={(messageContent: string) => onNewMessageContent(selectedConversation, messageContent)} users={users} />
                 </Grid>
             </Grid>
         </>

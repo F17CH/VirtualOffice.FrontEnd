@@ -11,7 +11,6 @@ import { newUserChannel } from "../services/channel/user_channel_handler";
 import { userCacheCurrentUser, userCacheloadUser } from "../services/users/users_cache";
 import { Conversation } from "../types/conversation/conversation";
 import { ConversationPackage } from "../types/conversation/conversation_package";
-import { IndividualConversation } from "../types/conversation/individual_conversation";
 import { Message } from "../types/conversation/message";
 import { Association } from "../types/group/association";
 import { LoginCredentials } from "../types/login_credentials";
@@ -36,11 +35,13 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
 
     const [currentUser, setCurrentUser] = useState<User>(null);
     const [users, setUsers] = useState<{ [userId: string]: User }>({});
+    const [selectedUser, setSelectedUser] = useState<User>(null);
 
     const [associations, setAssociations] = useState<{ [associationId: string]: Association }>({});
     const [selectedAssociation, setSelectedAssociation] = useState<Association>(null);
 
-    const [individualConversations, setIndividualConversations] = useState<{ [userId: string]: IndividualConversation }>({});
+    const [conversations, setConversations] = useState<{ [conversationId: string]: Conversation }>({});
+    const [individualConversations, setIndividualConversations] = useState<{ [userId: string]: Conversation }>({});
     const [selectedConversation, setSelectedConversation] = useState<Conversation>(null);
 
     useEffect(function (): void {
@@ -53,8 +54,9 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
         var newCurrentUser: User = sessionUser;
         setCurrentUser(newCurrentUser);
 
-        loadAssociations(sessionUser.associations);
-        setIndividualConversations(sessionUser.individualConversations)
+        loadUsers([newCurrentUser]);
+        loadAssociations(sessionUser.associations, newCurrentUser);
+        loadConversations(sessionUser.individualConversations, newCurrentUser)
 
         initSocket();
         userChannelInit();
@@ -65,24 +67,57 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
 
         userChannel.on("conversation_new", async (response) => {
             var newConversation: Conversation = response.data;
-            onNewConversation(newConversation);
+            //onNewConversation(newConversation);
         })
 
         joinChannel(userChannel);
     }
 
-    function loadAssociations(newAssociations: Association[]): void {
-        var newUsers : User[] = [];
+    function loadAssociations(newAssociations: Association[], currentUser: User): void {
+        var newUsers: User[] = [];
 
         setAssociations((prevState) => {
             newAssociations.map((association, _) => {
                 association.members.map((member, _) => {
-                    newUsers.push(member.user);
+                    if (member.user.id != currentUser.id) {
+                        newUsers.push(member.user);
+                    }
                 });
                 prevState[association.id] = association;
             });
 
             loadUsers(newUsers);
+
+            return { ...prevState }
+        });
+    }
+
+    function loadConversations(newIndividualConversations: Conversation[], currentUser: User): void {
+        var newUsers: User[] = [];
+
+        setIndividualConversations((prevState) => {
+            newIndividualConversations.map((conversation, _) => {
+                var recipientUser: User = null;
+                conversation.users.map((user, _) => {
+                    if (user.id != currentUser.id) {
+                        recipientUser = user;
+                        newUsers.push(user);
+                    }
+                });
+                if (recipientUser) {
+                    prevState[recipientUser.id] = conversation;
+                }
+            });
+
+            loadUsers(newUsers);
+
+            return { ...prevState }
+        });
+
+        setConversations((prevState) => {
+            newIndividualConversations.map((conversation, _) => {
+                prevState[conversation.id] = conversation;
+            });
 
             return { ...prevState }
         });
@@ -98,43 +133,27 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
         });
     }
 
-    const [conversationPackages, setConversationPackages] = useState<ConversationPackage[]>([]);
-
-    async function onNewConversation(newConversation: Conversation): Promise<void> {
-        newConversationChannel(newConversation, currentUser, onNewMessage);
-
-        var newConversationPackage: ConversationPackage = { conversation: newConversation, users: {} }
-
-        newConversation.user_ids.map(async (userId) => {
-            newConversationPackage.users[userId] = await userCacheloadUser(userId);
-        });
-
-        setConversationPackages((prevState: ConversationPackage[]) => [...prevState, newConversationPackage]);
-    }
-
     function onNewMessage(currentConversation: Conversation, newMessage: Message): void {
-        setConversationPackages((prevState) => {
-            var convIndex = prevState.findIndex(convPackage => convPackage.conversation == currentConversation);
+        setConversations((prevState) => {
             currentConversation.messages.push(newMessage);
-            prevState[convIndex].conversation = currentConversation;
-            return [...prevState];
+            prevState[currentConversation.id] = currentConversation;
+            return { ...prevState }
         });
     }
-
-
 
     function onSelectedAssociationChange(newSelectedAssociation: Association): void {
         setSelectedAssociation(newSelectedAssociation);
     }
 
-    //async function loadUser(userId: string): Promise<User> {
-    //   return await userCacheloadUser(userId);
-    //}
+    function onSelectedUserChange(newSelectedUser: User): void {
+        setSelectedUser(newSelectedUser);
+        setSelectedConversation(individualConversations[newSelectedUser.id])
+    }
 
     return (
         <>
             <Grid item className={classes.mainContainer} md={9}>
-                <ConversationPanel currentUser={currentUser} conversationPackages={conversationPackages} onNewConversation={onNewConversation} onNewMessage={onNewMessage} loadUser={null} selectedAssociation={selectedAssociation} users={users} />
+                <ConversationPanel currentUser={currentUser} selectedConversation={selectedConversation} onNewMessage={onNewMessage} users={users} onSelectedUserChange={onSelectedUserChange} selectedAssociation={selectedAssociation} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
                 <DataPanel currentUser={currentUser} users={users} onLogout={onLogout} associations={associations} selectedAssociation={selectedAssociation} onSelectedAssociationChange={onSelectedAssociationChange} />

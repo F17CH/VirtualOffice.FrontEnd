@@ -1,5 +1,5 @@
 export type Message = {
-    id: string;
-    user_id: string
+    id: number;
+    userId: string
     content: string
 }

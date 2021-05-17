@@ -20,10 +20,11 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 export type UserSelectionPanelProps = {
     currentUser: User;
     users: { [userId: string]: User };
+    onSelectedUserChange: (newSelectedUser: User) => void;
     selectedAssociation: Association;
 }
 
-export function UserSelectionPanel({ currentUser, users, selectedAssociation }: UserSelectionPanelProps): JSX.Element {
+export function UserSelectionPanel({ currentUser, users, onSelectedUserChange, selectedAssociation }: UserSelectionPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
@@ -31,7 +32,7 @@ export function UserSelectionPanel({ currentUser, users, selectedAssociation }: 
             {selectedAssociation ? (
 
                 selectedAssociation.members.map((member, index) => (
-                    <UserSelectionBox user={users[member.user.id]} onClick={null} key={index} />
+                    <UserSelectionBox user={users[member.user.id]} onClick={() => onSelectedUserChange(member.user)} key={index} />
                 ))
             ) : (
                 <>

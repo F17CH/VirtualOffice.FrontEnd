@@ -1,7 +1,9 @@
+import { User } from "../user";
 import { Message } from "./message";
 
 export type Conversation = {
     id: string;
-    user_ids: string[];
+    individual: boolean;
     messages: Message[];
+    users: User[]; 
 }

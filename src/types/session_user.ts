@@ -1,4 +1,4 @@
-import { IndividualConversation } from "./conversation/individual_conversation";
+import { Conversation } from "./conversation/conversation";
 import { Association } from "./group/association";
 
 export type SessionUser = {
@@ -7,5 +7,6 @@ export type SessionUser = {
     firstName: string;
     lastName: string;
     associations: Association[];
-    individualConversations: { [userId: string]: IndividualConversation };
+    individualConversations: Conversation[];
+    //individualConversations: { [userId: string]: IndividualConversation };
 }

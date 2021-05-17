@@ -26,23 +26,24 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 })));
 
 export type ConversationViewPanelProps = {
-    conversationPackage: ConversationPackage
+    selectedConversation: Conversation
     onNewMessageContent: (messageContent: string) => void
+    users: { [userId: string]:  User };
 }
 
-export function ConversationViewPanel({ conversationPackage, onNewMessageContent }: ConversationViewPanelProps): JSX.Element {
+export function ConversationViewPanel({ selectedConversation, onNewMessageContent, users }: ConversationViewPanelProps): JSX.Element {
     const classes = useStyles();
 
     return (
         <>
             <Grid container className={classes.backPanel}>
                 <Paper className={classes.conversationPanel} square>
-                    {conversationPackage ? (
+                    {selectedConversation ? (
                         <>
-                            <Typography>{conversationPackage.conversation.id}</Typography>
+                            <Typography>{selectedConversation.id}</Typography>
                             <>
-                                {conversationPackage.conversation.messages.map((message, index) => (
-                                    <MessageRow message={message} user={conversationPackage.users[message.user_id]} key={message.id} />
+                                {selectedConversation.messages.map((message, index) => (
+                                    <MessageRow message={message} user={users[message.userId]} key={message.id} />
                                 ))}
                             </>
                             <MessageInput onNewMessageContent={onNewMessageContent} />
