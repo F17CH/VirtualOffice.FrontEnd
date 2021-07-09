@@ -5,7 +5,6 @@ import SvgClose from "../icons/close";
 import SvgMax from "../icons/max";
 import SvgMin from "../icons/min";
 import { ipcRenderer as ipc, remote} from 'electron';
-import SvgLogo from "../icons/logo";
 
 type StyleProps =
     {
@@ -25,7 +24,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     titleBarHover: {
         minHeight: ({ titleBarHeightStyle }) => `${titleBarHeightStyle}`,
         maxHeight: ({ titleBarHeightStyle }) => `${titleBarHeightStyle}`,
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
         WebkitAppRegion: "drag",
         flexGrow: 1
     },
@@ -47,7 +46,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         WebkitAppRegion: "none",
     },
     maxButtonHover: {
-        background: theme.palette.secondary.light,
+        background: theme.palette.secondary.main,
         stroke: "white",
         cursor: "pointer",
         WebkitAppRegion: "none",
@@ -57,7 +56,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         WebkitAppRegion: "none",
     },
     minButtonHover: {
-        background: theme.palette.secondary.light,
+        background: theme.palette.secondary.main,
         stroke: "white",
         cursor: "pointer",
         WebkitAppRegion: "none",
@@ -88,7 +87,6 @@ export function TitleBar({
                 <Paper className={classes.titleBarMainPaper} square>
                     <Grid container className={classes.titleBarHover}>
                         <Grid container item xs={6} className={classes.titleBarContainer} direction="row" justify="flex-start">
-                            <SvgLogo height={titleBarHeight} />
                         </Grid>
                         <Grid container item xs={6} className={classes.titleBarContainer} direction="row-reverse" justify="flex-start">
                         <SvgClose className={closeHover ? classes.closeButtonHover : classes.closeButton}

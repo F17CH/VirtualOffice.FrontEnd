@@ -43,6 +43,31 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'css/[hash].[ext]'
+            }
+          },
+          'extract-loader',
+          'css-loader',
+          'postcss-loader'
+        ],
+        include: [/fonts/]
+      },
+      {
+        test: /\.(woff|woff2|ttf|otf)$/,
+        loader: 'file-loader',
+        include: [/fonts/],
+        options: {
+          name: '[hash].[ext]',
+          outputPath: 'css/',
+          publicPath: url => '../css/' + url
+        }
+      },
     ]
   },
   devServer: {

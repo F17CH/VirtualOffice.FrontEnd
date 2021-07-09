@@ -155,7 +155,16 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
 
     function onSelectedUserChange(newSelectedUser: User): void {
         setSelectedUser(newSelectedUser);
+
+        if (individualConversations[newSelectedUser.id])
+        {
         setSelectedConversation(individualConversations[newSelectedUser.id])
+        }
+        else if (newSelectedUser.id != currentUser.id) {
+            var conversation : Conversation = { id: null, individual: true, users: [currentUser, newSelectedUser], messages: [] }
+            individualConversations[newSelectedUser.id] = conversation;
+            setSelectedConversation(conversation)
+        }
     }
 
     return (

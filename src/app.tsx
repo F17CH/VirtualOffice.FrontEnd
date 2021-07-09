@@ -11,16 +11,24 @@ document.body.appendChild(mainElement);
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#eceff1",
+      main: "#2e7031",
+      dark: "#1e1e1e",
     },
     secondary: {
-      main: "#90a4ae",
+      main: "#43a047",
       light: "#b0bec5"
     },
     error: {
       main: "#ff0000"
+    },
+  },
+  typography: {
+    fontFamily: [
+      'Roboto'
+    ].join(','),
+    h3: {
+      fontSize: "0.8rem"
     }
-    
   }
 });
 
