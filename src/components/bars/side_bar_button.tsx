@@ -1,13 +1,22 @@
 import React, { ReactNode, useState } from "react";
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Grid, Icon, IconTypeMap, Paper, SvgIcon, SvgIconTypeMap, Toolbar, Typography } from "@material-ui/core";
+import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/styles';
+import { AppBar, Fab, Grid, Icon, IconTypeMap, Paper, SvgIcon, SvgIconTypeMap, Toolbar, Tooltip, Typography } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
 import '@fontsource/roboto';
 
+const SideBarTooltip = withStyles((theme: Theme) => ({
+    tooltip: {
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.secondary.light,
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+    },
+  }))(Tooltip);
+
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     sidebarButtonSquare: {
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.dark,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -19,11 +28,11 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     icon: {
         height: "50px",
         width: "40px",
-        color: theme.palette.primary.dark
+        color: theme.palette.secondary.light
     },
-    title: {
+    tooltip: {
         fontWeight: 500,
-        color: theme.palette.primary.dark
+        tooltip: theme.palette.primary.dark
     }
 })));
 
@@ -42,10 +51,10 @@ export function SideBarButton({
     const Icon = icon;
 
     return (
-            <Paper square className={classes.sidebarButtonSquare} elevation={0} >
-                <Icon className={classes.icon}/>
-
-                <Typography variant="h3" className={classes.title}>{title.toUpperCase()}</Typography>
-            </Paper>
+        <Paper square className={classes.sidebarButtonSquare} elevation={0} >
+            <SideBarTooltip className={classes.tooltip} title={title} aria-label={title} placement="right">
+                <Icon className={classes.icon} />
+            </SideBarTooltip>
+        </Paper>
     )
 }

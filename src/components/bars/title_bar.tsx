@@ -18,13 +18,13 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     titleBarMainPaper: {
         minHeight: ({ titleBarHeightStyle }) => `${titleBarHeightStyle}`,
         maxHeight: ({ titleBarHeightStyle }) => `${titleBarHeightStyle}`,
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.dark,
         padding: 0
     },
     titleBarHover: {
         minHeight: ({ titleBarHeightStyle }) => `${titleBarHeightStyle}`,
         maxHeight: ({ titleBarHeightStyle }) => `${titleBarHeightStyle}`,
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
         WebkitAppRegion: "drag",
         flexGrow: 1
     },
@@ -32,32 +32,32 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
 
     },
     closeButton: {
-        stroke: "black",
+        stroke: theme.palette.secondary.light,
         WebkitAppRegion: "none",
     },
     closeButtonHover: {
         background: theme.palette.error.main,
-        stroke: "white",
+        stroke: theme.palette.secondary.light,
         cursor: "pointer",
         WebkitAppRegion: "none",
     },
     maxButton: {
-        stroke: "black",
+        stroke: theme.palette.secondary.light,
         WebkitAppRegion: "none",
     },
     maxButtonHover: {
-        background: theme.palette.secondary.main,
-        stroke: "white",
+        background: theme.palette.primary.main,
+        stroke: theme.palette.secondary.light,
         cursor: "pointer",
         WebkitAppRegion: "none",
     },
     minButton: {
-        stroke: "black",
+        stroke: theme.palette.secondary.light,
         WebkitAppRegion: "none",
     },
     minButtonHover: {
-        background: theme.palette.secondary.main,
-        stroke: "white",
+        background: theme.palette.primary.main,
+        stroke: theme.palette.secondary.light,
         cursor: "pointer",
         WebkitAppRegion: "none",
     }

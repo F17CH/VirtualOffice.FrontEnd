@@ -11,12 +11,14 @@ document.body.appendChild(mainElement);
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#2e7031",
-      dark: "#1e1e1e",
+      main: "#00897b",
+      light: "#e8f1ff",
+      dark: "#005f56",
     },
     secondary: {
-      main: "#43a047",
-      light: "#b0bec5"
+      main: "#9e9e9e",
+      light: "#fafafa",
+      dark: "#212121"
     },
     error: {
       main: "#ff0000"

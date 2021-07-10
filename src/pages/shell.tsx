@@ -14,7 +14,7 @@ import { SideBar } from "../components/bars/side_bar";
 type StyleProps =
     {
         titleBarHeightStyle: string;
-        underBarHeightStyle: string;
+        underBarSizeStyle: string;
     }
 const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     shellMain: {
@@ -23,21 +23,23 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         minHeight: '100vh'
     },
     shellBody: {
-        flexGrow: 1,
-        margin: 0,
-        minHeight: '100%'
+        height: ({ titleBarHeightStyle }) => `calc(100vh - ${titleBarHeightStyle})`,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "flex-start"
     },
     container: {
-        height: ({ titleBarHeightStyle, underBarHeightStyle }) => `calc(100vh - ${titleBarHeightStyle} - ${underBarHeightStyle})`,
+        height: ({ titleBarHeightStyle }) => `calc(100vh - ${titleBarHeightStyle})`,
     }
 })));
 
 export function Shell(): JSX.Element {
     const titleBarHeight: string = '30px';
-    const underBarHeight: string = '3px'
-    const sideBarWidth: string = '100px'
+    const underBarSize: string = '3px'
+    const sideBarWidth: string = '60px'
 
-    const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight, underBarHeightStyle: underBarHeight };
+    const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight, underBarSizeStyle: underBarSize };
     const classes = useStyles(styleProps);
 
     const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
@@ -71,17 +73,15 @@ export function Shell(): JSX.Element {
     return (
         <div className={classes.shellMain}>
             <TitleBar titleBarHeight={titleBarHeight} />
-            <UnderBar underBarHeight={underBarHeight} />
-            <div className={classes.shellBody}>
-                <Grid container direction="row" className={classes.container} spacing={0}>
-                    <SideBar sideBarWidth={sideBarWidth} />
+            <Grid container className={classes.shellBody}>
+                <SideBar sideBarWidth={sideBarWidth} underBarSize={underBarSize} />
+                    <UnderBar underBarHeight={underBarSize} />
                     {/* {sessionUser ? (
                         <Main sessionUser={sessionUser} onLogout={onLogout} />
                     ) : (
                         <Login onLogin={onLogin} />
                     )} */}
-                </Grid>
-            </div>
+            </Grid>
         </div>
     )
 }
