@@ -28,46 +28,18 @@ module.exports = {
         },
       },
       {
-        test: /\.png$/,
+        test: /\.(png|jpg|jpeg|gif|svg)$/,
         exclude: /(node_modules)/,
         loader: 'file-loader'
       },
       {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: 'svg-url-loader',
-            options: {
-              limit: 10000,
-            },
-          },
-        ],
+        test: /\.(woff|woff2|ttf|eot)$/,
+        use: 'file-loader?name=fonts/[name].[ext]!static'
       },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'css/[hash].[ext]'
-            }
-          },
-          'extract-loader',
-          'css-loader',
-          'postcss-loader'
-        ],
-        include: [/fonts/]
-      },
-      {
-        test: /\.(woff|woff2|ttf|otf)$/,
-        loader: 'file-loader',
-        include: [/fonts/],
-        options: {
-          name: '[hash].[ext]',
-          outputPath: 'css/',
-          publicPath: url => '../css/' + url
-        }
-      },
+        loader: "css-loader"
+    },
     ]
   },
   devServer: {

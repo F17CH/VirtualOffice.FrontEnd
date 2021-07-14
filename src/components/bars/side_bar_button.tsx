@@ -3,14 +3,13 @@ import { createStyles, makeStyles, Theme, withStyles } from '@material-ui/core/s
 import { AppBar, Fab, Grid, Icon, IconTypeMap, Paper, SvgIcon, SvgIconTypeMap, Toolbar, Tooltip, Typography } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
-import '@fontsource/roboto';
-
 const SideBarTooltip = withStyles((theme: Theme) => ({
     tooltip: {
       backgroundColor: theme.palette.primary.dark,
       color: theme.palette.secondary.light,
       maxWidth: 220,
       fontSize: theme.typography.pxToRem(12),
+      fontFamily: theme.typography.fontFamily
     },
   }))(Tooltip);
 
@@ -29,10 +28,6 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         height: "50px",
         width: "40px",
         color: theme.palette.secondary.light
-    },
-    tooltip: {
-        fontWeight: 500,
-        tooltip: theme.palette.primary.dark
     }
 })));
 
@@ -52,7 +47,7 @@ export function SideBarButton({
 
     return (
         <Paper square className={classes.sidebarButtonSquare} elevation={0} >
-            <SideBarTooltip className={classes.tooltip} title={title} aria-label={title} placement="right">
+            <SideBarTooltip title={title.toUpperCase()} aria-label={title} placement="right">
                 <Icon className={classes.icon} />
             </SideBarTooltip>
         </Paper>

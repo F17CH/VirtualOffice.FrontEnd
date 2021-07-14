@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid } from "@material-ui/core"
-import { TitleBar } from "../components/bars/title_bar";
-import { Login } from "./login";
-import { Main } from "./main";
+import { TitleBar } from "./bars/title_bar";
 import { deleteUserToken } from "../services/user_token_manager";
 import { getCurrentUser, postSignOut } from "../services/api/user/user_requests";
-import { User } from "../types/user";
 import { SessionUser } from "../types/session_user";
-import { UnderBar } from "../components/bars/under_bar";
-import { SideBar } from "../components/bars/side_bar";
+import { UnderBar } from "./bars/under_bar";
+import { MainZone } from "./zone/main_zone";
+import { LoginZone } from "./zone/login_zone";
 
 type StyleProps =
     {
@@ -73,15 +70,13 @@ export function Shell(): JSX.Element {
     return (
         <div className={classes.shellMain}>
             <TitleBar titleBarHeight={titleBarHeight} />
-            <Grid container className={classes.shellBody}>
-                <SideBar sideBarWidth={sideBarWidth} underBarSize={underBarSize} />
-                    <UnderBar underBarHeight={underBarSize} />
-                    {/* {sessionUser ? (
-                        <Main sessionUser={sessionUser} onLogout={onLogout} />
-                    ) : (
-                        <Login onLogin={onLogin} />
-                    )} */}
-            </Grid>
+                {sessionUser ? (
+                    <MainZone sessionUser={sessionUser} onLogout={onLogout} sideBarWidth={sideBarWidth} underBarSize={underBarSize} titleBarHeight={titleBarHeight} />
+                ) : (
+                    <>
+                        <LoginZone onLogin={onLogin} underBarSize={underBarSize} titleBarHeight={titleBarHeight} />
+                    </>
+                )}
         </div>
     )
 }

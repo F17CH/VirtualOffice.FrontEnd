@@ -9,11 +9,11 @@ type StyleProps =
     }
 const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     titleBarMainPaper: {
-        flexGrow: 1,
+        width: "100%",
         minHeight: ({ underBarHeightStyle }) => `${underBarHeightStyle}`,
         maxHeight: ({ underBarHeightStyle }) => `${underBarHeightStyle}`,
         backgroundColor: theme.palette.primary.main,
-        padding: 0
+        zIndex: 1000
     }
 })));
 

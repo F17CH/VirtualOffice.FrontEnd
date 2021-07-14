@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Grid, Paper, SvgIcon, Toolbar, Typography } from "@material-ui/core";
-import SvgClose from "../icons/close";
-import SvgMax from "../icons/max";
-import SvgMin from "../icons/min";
 import { ipcRenderer as ipc, remote } from 'electron';
 import { Business, Settings, Person, People } from "@material-ui/icons";
 import { SideBarButton } from "./side_bar_button";
@@ -14,7 +11,7 @@ type StyleProps =
         underBarSizeStyle: string;
     }
 const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
-    sideBarContainer: {
+    sideBarDiv: {
         minWidth: ({ sideBarWidthStyle }) => `${sideBarWidthStyle}`,
         maxWidth: ({ sideBarWidthStyle }) => `${sideBarWidthStyle}`,
         height: "100%",
@@ -36,10 +33,12 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         minWidth: ({ underBarSizeStyle }) => `${underBarSizeStyle}`,
         maxWidth: ({ underBarSizeStyle }) => `${underBarSizeStyle}`,
         backgroundColor: theme.palette.primary.main,
+        zIndex: 1000
     },
 })));
 
 type SideBarProps = {
+    //onSettingsClick: () => void;
     sideBarWidth: string;
     underBarSize: string;
 }
@@ -52,7 +51,7 @@ export function SideBar({
     const classes = useStyles(styleProps);
 
     return (
-        <Grid container direction="row" className={classes.sideBarContainer} spacing={0}>
+        <div className={classes.sideBarDiv}>
             <Paper className={classes.sideBarMainPaper} square>
                 <div>
                     <SideBarButton icon={Business} title={"Office View"} />
@@ -66,6 +65,6 @@ export function SideBar({
             <Paper className={classes.underBarPaper} square>
 
             </Paper>
-        </Grid>
+        </div>
     )
 }

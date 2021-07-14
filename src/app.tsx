@@ -1,9 +1,12 @@
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDom from 'react-dom';
-import { Shell } from './pages/shell';
+import { Shell } from './components/shell';
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+
+import  "@fontsource/m-plus-1p/index.css";
+import "@fontsource/roboto/index.css";
 
 const mainElement = document.createElement('div');
 document.body.appendChild(mainElement);
@@ -26,11 +29,8 @@ const theme = createMuiTheme({
   },
   typography: {
     fontFamily: [
-      'Roboto'
+      "sans-serif"
     ].join(','),
-    h3: {
-      fontSize: "0.8rem"
-    }
   }
 });
 

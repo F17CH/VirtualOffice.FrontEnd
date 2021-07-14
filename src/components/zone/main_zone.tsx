@@ -1,37 +1,55 @@
 import { Button, createStyles, Grid, makeStyles, Paper, Theme } from "@material-ui/core";
+import { Settings } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
-import { LoginBox } from "../components/login/login_box";
-import { ConversationPanel } from "../components/panels/conversation_panel";
-import { DataPanel } from "../components/panels/data_panel";
-import { UserBox } from "../components/user/user_box";
-import { joinChannel } from "../services/channel/channel_handler";
-import { newConversationChannel } from "../services/channel/conversation_channel_handler";
-import { initSocket } from "../services/channel/socket_handler";
-import { newUserChannel } from "../services/channel/user_channel_handler";
-import { userCacheCurrentUser, userCacheloadUser } from "../services/users/users_cache";
-import { Conversation } from "../types/conversation/conversation";
-import { ConversationPackage } from "../types/conversation/conversation_package";
-import { Message } from "../types/conversation/message";
-import { Association } from "../types/group/association";
-import { LoginCredentials } from "../types/login_credentials";
-import { SessionUser } from "../types/session_user";
-import { User } from "../types/user";
+import { SideBar } from "../bars/side_bar";
+import { UnderBar } from "../bars/under_bar";
+import { ConversationPanel } from "../panels/conversation_panel";
+import { DataPanel } from "../panels/data_panel";
+import { UserBox } from "../user/user_box";
+import { joinChannel } from "../../services/channel/channel_handler";
+import { newConversationChannel } from "../../services/channel/conversation_channel_handler";
+import { initSocket } from "../../services/channel/socket_handler";
+import { newUserChannel } from "../../services/channel/user_channel_handler";
+import { userCacheCurrentUser, userCacheloadUser } from "../../services/users/users_cache";
+import { Conversation } from "../../types/conversation/conversation";
+import { ConversationPackage } from "../../types/conversation/conversation_package";
+import { Message } from "../../types/conversation/message";
+import { Association } from "../../types/group/association";
+import { LoginCredentials } from "../../types/login_credentials";
+import { SessionUser } from "../../types/session_user";
+import { User } from "../../types/user";
+import { SettingsPage } from "./main_zone_pages/settings_page";
 
-const useStyles = (makeStyles<Theme>(theme => createStyles({
-    mainContainer: {
-        flexDirection: "column",
-        height: "100%",
-        zIndex: 1,
+type StyleProps =
+    {
+        titleBarHeightStyle: string;
+        sideBarWidthStyle: string;
+    }
+
+const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
+    mainBody: {
+        height: ({ titleBarHeightStyle }) => `calc(100vh - ${titleBarHeightStyle})`,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "flex-start"
+    },
+    subBody: {
+        width: "100%",
     },
 })));
 
-export type MainProps = {
+export type MainZoneProps = {
     sessionUser: SessionUser;
     onLogout: () => void;
+    titleBarHeight: string;
+    underBarSize: string;
+    sideBarWidth: string;
 }
 
-export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
-    const classes = useStyles();
+export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, sideBarWidth }: MainZoneProps): JSX.Element {
+    const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight, sideBarWidthStyle: sideBarWidth };
+    const classes = useStyles(styleProps);
 
     const [currentUser, setCurrentUser] = useState<User>(null);
     const [users, setUsers] = useState<{ [userId: string]: User }>({});
@@ -127,7 +145,7 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
         });
     }
 
-     function initConversation(newConversation: Conversation, currentUser: User): void {
+    function initConversation(newConversation: Conversation, currentUser: User): void {
         newConversationChannel(newConversation, currentUser, onNewMessage)
     }
 
@@ -156,25 +174,33 @@ export function Main({ sessionUser, onLogout }: MainProps): JSX.Element {
     function onSelectedUserChange(newSelectedUser: User): void {
         setSelectedUser(newSelectedUser);
 
-        if (individualConversations[newSelectedUser.id])
-        {
-        setSelectedConversation(individualConversations[newSelectedUser.id])
+        if (individualConversations[newSelectedUser.id]) {
+            setSelectedConversation(individualConversations[newSelectedUser.id])
         }
         else if (newSelectedUser.id != currentUser.id) {
-            var conversation : Conversation = { id: null, individual: true, users: [currentUser, newSelectedUser], messages: [] }
+            var conversation: Conversation = { id: null, individual: true, users: [currentUser, newSelectedUser], messages: [] }
             individualConversations[newSelectedUser.id] = conversation;
             setSelectedConversation(conversation)
         }
     }
 
     return (
-        <>
-            <Grid item className={classes.mainContainer} md={9}>
+        <div className={classes.mainBody}>
+            <SideBar sideBarWidth={sideBarWidth} underBarSize={underBarSize} />
+            <div className={classes.subBody}>
+                <UnderBar underBarHeight={underBarSize} />
+                <UserBox user={currentUser} onLogout={onLogout} />
+            </div>
+
+            {/* <SettingsPage user={currentUser} onLogout={onLogout} /> */}
+            {/* </Grid> */}
+            {/* </Grid> */}
+            {/* <Grid item className={classes.mainContainer} md={9}>
                 <ConversationPanel currentUser={currentUser} selectedConversation={selectedConversation} onNewMessage={onNewMessage} users={users} onSelectedUserChange={onSelectedUserChange} selectedAssociation={selectedAssociation} />
             </Grid>
             <Grid item className={classes.mainContainer} md={3}>
                 <DataPanel currentUser={currentUser} users={users} onLogout={onLogout} associations={associations} selectedAssociation={selectedAssociation} onSelectedAssociationChange={onSelectedAssociationChange} />
-            </Grid>
-        </>
+            </Grid> */}
+        </div >
     )
 }
