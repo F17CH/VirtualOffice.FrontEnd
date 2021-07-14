@@ -55,7 +55,9 @@ export function LoginZone({ onLogin, titleBarHeight, underBarSize }: LoginZonePr
             if (result.success) {
                 onLogin();
             }
-            setLoading(false);
+            else {
+                setLoading(false);
+            }
         })
     }
 

@@ -73,7 +73,7 @@ export function LoginTextBox({
             <Paper square className={classes.iconPaper}>
                 <Icon className={classes.icon} />
             </Paper>
-            <TextField className={classes.textBox} value={value} onChange={onChange} type={password ? "password" : ""} InputProps={{ classes: { input: classes.textBoxText }, disableUnderline: true }}></TextField>
+            <TextField className={classes.textBox} value={value} onChange={onChange} type={password ? "password" : ""} InputProps={{ classes: { input: classes.textBoxText }, disableUnderline: true, } } label={""}></TextField>
         </div>
     </div>
 }
