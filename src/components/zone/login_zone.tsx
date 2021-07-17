@@ -4,6 +4,7 @@ import { LoginPanel } from "../panels/login_panel";
 import { postAttemptSignIn } from "../../services/api/user/user_requests";
 import { LoginCredentials } from "../../types/login_credentials";
 import { UnderBar } from "../bars/under_bar";
+import { RegisterPanel } from "../panels/register_panel";
 
 type StyleProps =
     {
@@ -41,6 +42,7 @@ export function LoginZone({ onLogin, titleBarHeight, underBarSize }: LoginZonePr
     const [loading, setLoading] = useState<boolean>(false);
     const [loginCredentials, setLoginCredentials] = useState<LoginCredentials>({ email: "", password: "" });
     const [loginResponse, setLoginResponse] = useState<string>("");
+    const [registerMode, setRegisterMode] = useState<boolean>(false);
 
     function handleLoginCredentialsChange(updates: Partial<LoginCredentials>): void {
         setLoginCredentials((previousState) => ({ ...previousState, ...updates }));
@@ -61,14 +63,20 @@ export function LoginZone({ onLogin, titleBarHeight, underBarSize }: LoginZonePr
         })
     }
 
+    function onRegisterBack(): void {
+        setRegisterMode(false);
+    }
+
+
+
     return (
         <div className={classes.mainBody}>
             <UnderBar underBarHeight={underBarSize} />
             <Paper square className={classes.background}>
-                {!loading ? (
-                    <LoginPanel loginCredentials={loginCredentials} onLoginCredentialsChange={handleLoginCredentialsChange} loginMessage={loginResponse} attemptLogin={attemptLogin} />
+                {registerMode ? (
+                    <RegisterPanel registerCredentials={loginCredentials} onRegisterCredentialsChange={handleLoginCredentialsChange} registerMessage={loginResponse} attemptRegister={attemptLogin} onBack={onRegisterBack} loading={loading} />
                 ) : (
-                    <CircularProgress />
+                    <LoginPanel loginCredentials={loginCredentials} onLoginCredentialsChange={handleLoginCredentialsChange} loginMessage={loginResponse} attemptLogin={attemptLogin} onRegisterSelect={() => setRegisterMode(true)} loading={loading} />
                 )}
             </Paper>
         </div>
