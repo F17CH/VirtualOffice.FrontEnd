@@ -1,10 +1,11 @@
 import { CircularProgress, createStyles, Grid, makeStyles, Paper, Theme } from "@material-ui/core";
 import React, { useState } from "react";
 import { LoginPanel } from "../panels/login_panel";
-import { postAttemptSignIn } from "../../services/api/user/user_requests";
+import { postAttemptRegister, postAttemptSignIn } from "../../services/api/user/user_requests";
 import { LoginCredentials } from "../../types/login_credentials";
 import { UnderBar } from "../bars/under_bar";
 import { RegisterPanel } from "../panels/register_panel";
+import { getBlankCredentials, RegisterCredentials } from "../../types/register_credentials";
 
 type StyleProps =
     {
@@ -21,7 +22,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         width: "100%"
     },
     background: {
-        flexGrow: 1,
+        height: "100%",
         backgroundColor: theme.palette.secondary.light,
         display: "flex",
         alignItems: "center",
@@ -43,12 +44,18 @@ export function LoginZone({ onLogin, titleBarHeight, underBarSize }: LoginZonePr
     const [loginCredentials, setLoginCredentials] = useState<LoginCredentials>({ email: "", password: "" });
     const [loginResponse, setLoginResponse] = useState<string>("");
     const [registerMode, setRegisterMode] = useState<boolean>(false);
+    const [registerCredentials, setRegisterCredentials] = useState<RegisterCredentials>(getBlankCredentials());
+    const [registerResponse, setRegisterResponse] = useState<string>("");
 
     function handleLoginCredentialsChange(updates: Partial<LoginCredentials>): void {
         setLoginCredentials((previousState) => ({ ...previousState, ...updates }));
     }
 
-    function attemptLogin(): void {
+    function handleRegisterCredentialsChange(updates: Partial<RegisterCredentials>): void {
+        setRegisterCredentials((previousState) => ({ ...previousState, ...updates }));
+    }
+
+    function attemptLogin(): void {   
         setLoading(true);
         postAttemptSignIn(loginCredentials).then((result) => {
             setLoginResponse(result.message);
@@ -63,8 +70,44 @@ export function LoginZone({ onLogin, titleBarHeight, underBarSize }: LoginZonePr
         })
     }
 
+    function attemptRegister(): void {
+        if (registerCredentials.email != "" &&
+         registerCredentials.first_name != "" &&
+        registerCredentials.last_name != "" &&
+        registerCredentials.password != "" &&
+        registerCredentials.password_confirmation != "")
+        {
+            if (registerCredentials.password === registerCredentials.password_confirmation)
+            {
+                setLoading(true);
+                postAttemptRegister(registerCredentials).then((result) => {
+                    setRegisterResponse(result.message);
+        
+                    if (result.success) {
+                        onLogin();
+                        onRegisterBack();
+                    }
+                    else {
+                        setLoading(false);
+                    }
+                })
+            }
+            else
+            {
+                setRegisterResponse("Passwords do not match.")
+            }
+        }
+        else
+        {
+            setRegisterResponse("Please enter a value for all fields.")
+        }
+    }
+
     function onRegisterBack(): void {
         setRegisterMode(false);
+
+        setRegisterResponse("");
+        setRegisterCredentials(getBlankCredentials());
     }
 
 
@@ -72,13 +115,13 @@ export function LoginZone({ onLogin, titleBarHeight, underBarSize }: LoginZonePr
     return (
         <div className={classes.mainBody}>
             <UnderBar underBarHeight={underBarSize} />
-            <Paper square className={classes.background}>
+            <div className={classes.background}>
                 {registerMode ? (
-                    <RegisterPanel registerCredentials={loginCredentials} onRegisterCredentialsChange={handleLoginCredentialsChange} registerMessage={loginResponse} attemptRegister={attemptLogin} onBack={onRegisterBack} loading={loading} />
+                    <RegisterPanel registerCredentials={registerCredentials} onRegisterCredentialsChange={handleRegisterCredentialsChange} registerMessage={registerResponse} attemptRegister={attemptRegister} onBack={onRegisterBack} loading={loading} />
                 ) : (
                     <LoginPanel loginCredentials={loginCredentials} onLoginCredentialsChange={handleLoginCredentialsChange} loginMessage={loginResponse} attemptLogin={attemptLogin} onRegisterSelect={() => setRegisterMode(true)} loading={loading} />
                 )}
-            </Paper>
+            </div>
         </div>
     )
 }

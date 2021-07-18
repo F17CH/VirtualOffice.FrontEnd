@@ -1,5 +1,6 @@
 import { LoginCredentials } from "../../../types/login_credentials";
 import { LoginResult } from "../../../types/login_result";
+import { RegisterCredentials } from "../../../types/register_credentials";
 import { SessionUser } from "../../../types/session_user";
 import { User } from "../../../types/user";
 import { setUserToken } from "../../user_token_manager";
@@ -44,6 +45,44 @@ export async function postAttemptSignIn(loginCredentials: LoginCredentials): Pro
         return result;
     });
 }
+
+export async function postAttemptRegister(registerCredentials: RegisterCredentials): Promise<LoginResult> {
+    var result: LoginResult = {
+        success: false,
+        message: "",
+    }
+
+    return await nonAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/sign_up`,
+        "post",
+        {   headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(registerCredentials) }
+    ).then(async (response) => {
+        var signInResponse: SignInResponse = await getResponseBody<SignInResponse>(response);
+
+        switch (response.status) {
+            case 200: {
+                setUserToken(signInResponse.token);
+
+                result = {
+                    success: true,
+                    message: "Login Successful.",
+                }
+                break;
+            }
+            case 404: {
+                result = {
+                    success: false,
+                    message: "Invalid Data",
+                }
+            }
+            default: {
+                break;
+            }
+        }
+        return result;
+    });
+}
+
 
 export async function postSignOut(): Promise<boolean> {
     return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/sign_out`,
