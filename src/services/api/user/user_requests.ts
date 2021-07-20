@@ -4,7 +4,7 @@ import { RegisterCredentials } from "../../../types/register_credentials";
 import { SessionUser } from "../../../types/session_user";
 import { User } from "../../../types/user";
 import { setUserToken } from "../../user_token_manager";
-import { getResponseBody } from "../api_utils";
+import { getDataResponseBody, getErrorResponseBody } from "../api_utils";
 import { ErrorResponse } from "../error_response";
 import { nonAuthorizedRequest } from "../non_authorized_request";
 import { userAuthorizedRequest } from "../user_authorized_request";
@@ -23,7 +23,7 @@ export async function postAttemptSignIn(loginCredentials: LoginCredentials): Pro
             body: JSON.stringify(loginCredentials)
         }
     ).then(async (response) => {
-        var signInResponse: SignInResponse = await getResponseBody<SignInResponse>(response);
+        var signInResponse: SignInResponse = await getDataResponseBody<SignInResponse>(response);
 
         switch (response.status) {
             case 200: {
@@ -33,18 +33,21 @@ export async function postAttemptSignIn(loginCredentials: LoginCredentials): Pro
                     success: true,
                     message: "Login Successful.",
                 }
+                break;
             }
             case 401: {
                 result = {
                     success: false,
                     message: "Incorrect Username Or Password",
                 }
+                break;
             }
             default: {
                 result = {
                     success: false,
                     message: "Unknown Error has occured.",
                 }
+                break;
             }
         }
         return result;
@@ -66,7 +69,7 @@ export async function postAttemptRegister(registerCredentials: RegisterCredentia
     ).then(async (response) => {
         switch (response.status) {
             case 200: {
-                var signInResponse: SignInResponse = await getResponseBody<SignInResponse>(response);
+                var signInResponse: SignInResponse = await getDataResponseBody<SignInResponse>(response);
 
                 setUserToken(signInResponse.token);
 
@@ -77,18 +80,20 @@ export async function postAttemptRegister(registerCredentials: RegisterCredentia
                 break;
             }
             case 422: {
-                var errorResponse: ErrorResponse = await getResponseBody<ErrorResponse>(response);
+                var errorResponse: ErrorResponse = await getErrorResponseBody<ErrorResponse>(response);
 
                 result = {
                     success: false,
-                    message: errorResponse.error.details
+                    message: errorResponse.details
                 }
+                break;
             }
             default: {
                 result = {
                     success: false,
                     message: "Unknown Error has occured.",
                 }
+                break;
             }
         }
         return result;
@@ -112,7 +117,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
         var result: SessionUser | null = null;
 
         if (response) {
-            result = await getResponseBody<SessionUser>(response);
+            result = await getDataResponseBody<SessionUser>(response);
         }
 
         return result;
@@ -123,6 +128,6 @@ export async function getUser(userId: string): Promise<User> {
     return await userAuthorizedRequest(`${process.env.VIRTUAL_OFFICE_API_URL}/users/${userId}`,
         "get",
     ).then((response) => {
-        return getResponseBody<User>(response);
+        return getDataResponseBody<User>(response);
     });
 }

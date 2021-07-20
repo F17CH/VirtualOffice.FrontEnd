@@ -1,8 +1,4 @@
-export interface ErrorResponse {
-    error: InnerResponse
-}
-
-interface InnerResponse {
+export type ErrorResponse = {
     code: number;
     details: string;
 }

@@ -55,71 +55,79 @@ export function LoginZone({ onLogin, titleBarHeight, underBarSize }: LoginZonePr
         setRegisterCredentials((previousState) => ({ ...previousState, ...updates }));
     }
 
-    function attemptLogin(): void {   
-        setLoading(true);
-        postAttemptSignIn(loginCredentials).then((result) => {
-            setLoginResponse(result.message);
+    function attemptLogin(): void {
+        if (loginCredentials.email != "" &&
+            loginCredentials.password != "") {
 
+            setLoading(true);
+            postAttemptSignIn(loginCredentials).then((result) => {
+                setLoginResponse(result.message);
 
-            if (result.success) {
-                onLogin();
-            }
-            else {
-                setLoading(false);
-            }
-        })
+                if (result.success) {
+                    onLogin();
+                }
+                else {
+                    handleLoginCredentialsChange({ password: "" });
+                    setLoading(false);
+                }
+            });
+        }
+        else {
+            setLoginResponse("Please enter a value for all fields.")
+        }
     }
 
     function attemptRegister(): void {
         if (registerCredentials.email != "" &&
-         registerCredentials.first_name != "" &&
-        registerCredentials.last_name != "" &&
-        registerCredentials.password != "" &&
-        registerCredentials.password_confirmation != "")
-        {
-            if (registerCredentials.password === registerCredentials.password_confirmation)
-            {
+            registerCredentials.first_name != "" &&
+            registerCredentials.last_name != "" &&
+            registerCredentials.password != "" &&
+            registerCredentials.password_confirmation != "") {
+            if (registerCredentials.password === registerCredentials.password_confirmation) {
                 setLoading(true);
                 postAttemptRegister(registerCredentials).then((result) => {
                     setRegisterResponse(result.message);
-        
+
                     if (result.success) {
                         onLogin();
-                        onRegisterBack();
+                        onRegisterHide();
                     }
                     else {
                         setLoading(false);
                     }
                 })
             }
-            else
-            {
+            else {
                 setRegisterResponse("Passwords do not match.")
             }
         }
-        else
-        {
+        else {
             setRegisterResponse("Please enter a value for all fields.")
         }
     }
 
-    function onRegisterBack(): void {
+    function onRegisterShow(): void {
+        setRegisterMode(true);
+
+        setLoginResponse("");
+        setLoginCredentials({ email: "", password: "" });
+    }
+
+    function onRegisterHide(): void {
         setRegisterMode(false);
 
         setRegisterResponse("");
         setRegisterCredentials(getBlankCredentials());
     }
 
-
-
     return (
         <div className={classes.mainBody}>
             <UnderBar underBarHeight={underBarSize} />
             <div className={classes.background}>
                 {registerMode ? (
-                    <RegisterPanel registerCredentials={registerCredentials} onRegisterCredentialsChange={handleRegisterCredentialsChange} registerMessage={registerResponse} attemptRegister={attemptRegister} onBack={onRegisterBack} loading={loading} />
+                    <RegisterPanel registerCredentials={registerCredentials} onRegisterCredentialsChange={handleRegisterCredentialsChange} registerMessage={registerResponse} attemptRegister={attemptRegister} onBack={onRegisterHide} loading={loading} />
                 ) : (
-                    <LoginPanel loginCredentials={loginCredentials} onLoginCredentialsChange={handleLoginCredentialsChange} loginMessage={loginResponse} attemptLogin={attemptLogin} onRegisterSelect={() => setRegisterMode(true)} loading={loading} />
+                    <LoginPanel loginCredentials={loginCredentials} onLoginCredentialsChange={handleLoginCredentialsChange} loginMessage={loginResponse} attemptLogin={attemptLogin} onRegisterSelect={onRegisterShow} loading={loading} />
                 )}
             </div>
         </div>

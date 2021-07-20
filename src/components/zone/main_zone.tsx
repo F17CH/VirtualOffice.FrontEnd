@@ -24,6 +24,7 @@ type StyleProps =
     {
         titleBarHeightStyle: string;
         sideBarWidthStyle: string;
+        underBarSizeStyle: string;
     }
 
 const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
@@ -35,8 +36,13 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         alignItems: "flex-start"
     },
     subBody: {
+        height: "100%",
         width: "100%",
     },
+    pageBody: {
+        height: ({ titleBarHeightStyle, underBarSizeStyle }) => `calc(100vh - ${titleBarHeightStyle} - ${underBarSizeStyle})`,
+        width: "100%",
+    }
 })));
 
 export type MainZoneProps = {
@@ -48,7 +54,7 @@ export type MainZoneProps = {
 }
 
 export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, sideBarWidth }: MainZoneProps): JSX.Element {
-    const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight, sideBarWidthStyle: sideBarWidth };
+    const styleProps: StyleProps = { titleBarHeightStyle: titleBarHeight, sideBarWidthStyle: sideBarWidth, underBarSizeStyle: underBarSize };
     const classes = useStyles(styleProps);
 
     const [currentUser, setCurrentUser] = useState<User>(null);
@@ -189,10 +195,12 @@ export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, 
             <SideBar sideBarWidth={sideBarWidth} underBarSize={underBarSize} />
             <div className={classes.subBody}>
                 <UnderBar underBarHeight={underBarSize} />
-                <UserBox user={currentUser} onLogout={onLogout} />
+                <div className={classes.pageBody}>
+                    <SettingsPage user={currentUser} onLogout={onLogout} />
+                </div>
             </div>
 
-            {/* <SettingsPage user={currentUser} onLogout={onLogout} /> */}
+            {/*  */}
             {/* </Grid> */}
             {/* </Grid> */}
             {/* <Grid item className={classes.mainContainer} md={9}>

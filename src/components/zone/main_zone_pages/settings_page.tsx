@@ -4,14 +4,21 @@ import { AppBar, Button, Grid, MenuItem, Paper, Select, TextField, Toolbar, Typo
 import { User } from "../../../types/user";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
-    userBox: {
-        flexBasis: "200px",
-        backgroundColor: theme.palette.secondary.main,
+    settings: {
+        height: "100%",
+        width: "100%",
         display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-        alignItems: "center"
+        justifyContent: "flex-start",
+        flexDirection: "row",
     },
+    settingsMenu: {
+        width: "33.3%",
+        backgroundColor: theme.palette.primary.dark
+    },
+    settingsOptions: {
+        width: "66.6%",
+        backgroundColor: theme.palette.secondary.main
+    }
 })));
 
 export type SettingsPageProps = {
@@ -19,18 +26,15 @@ export type SettingsPageProps = {
     onLogout: () => void;
 }
 
-export function SettingsPage({user, onLogout}: SettingsPageProps): JSX.Element {
+export function SettingsPage({ user, onLogout }: SettingsPageProps): JSX.Element {
     const classes = useStyles();
 
-    return (<Paper className={classes.userBox} square>
-        {user ? (
-        <>
-        <p> {user.firstName + " " + user.lastName} </p>
-        <Button variant="contained" onClick={onLogout}>Logout</Button>
-        </>
-        ) : (
-        <>
-        </>
-        )}
-    </Paper>)
+    return <div className={classes.settings}>
+        <Paper square className={classes.settingsMenu}>
+
+        </Paper>
+        <Paper square className={classes.settingsOptions}>
+
+        </Paper>
+    </div>
 }
