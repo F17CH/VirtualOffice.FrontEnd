@@ -23,7 +23,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     },
     background: {
         height: "100%",
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.secondary.main,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

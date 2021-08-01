@@ -16,7 +16,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
     upperText: {
         fontWeight: 500,
-        color: theme.palette.secondary.light,
+        color: "white",
         paddingBottom: "10px"
     },
     iconPaper: {
@@ -30,14 +30,14 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     icon: {
         height: "25px",
         width: "25px",
-        color: theme.palette.secondary.light
+        color: "white",
     },
     textBox: {
         display: "flex",
         justifyContent: "center",
         flexDirection: "column",
         flexGrow: 1,
-        backgroundColor: theme.palette.secondary.light
+        backgroundColor: "white",
     },
     textBoxText: {
         paddingLeft: "10px",

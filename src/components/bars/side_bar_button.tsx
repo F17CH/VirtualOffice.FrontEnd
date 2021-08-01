@@ -5,7 +5,7 @@ import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
 const SideBarTooltip = withStyles((theme: Theme) => ({
     tooltip: {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: theme.palette.primary.main,
       color: theme.palette.secondary.light,
       maxWidth: 220,
       fontSize: theme.typography.pxToRem(12),
@@ -15,7 +15,7 @@ const SideBarTooltip = withStyles((theme: Theme) => ({
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     sidebarButtonSquare: {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.secondary.dark,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -27,7 +27,10 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     icon: {
         height: "50px",
         width: "40px",
-        color: theme.palette.secondary.light
+        color: theme.palette.primary.main,
+        "&:hover": {
+            color: theme.palette.secondary.main,
+        }
     }
 })));
 

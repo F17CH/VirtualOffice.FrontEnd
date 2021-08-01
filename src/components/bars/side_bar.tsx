@@ -24,7 +24,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         paddingBottom: "20px",
         minWidth: ({ sideBarWidthStyle, underBarSizeStyle }) => `calc(${sideBarWidthStyle} - ${underBarSizeStyle})`,
         maxWidth: ({ sideBarWidthStyle, underBarSizeStyle }) => `calc(${sideBarWidthStyle} - ${underBarSizeStyle})`,
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.secondary.dark,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between"

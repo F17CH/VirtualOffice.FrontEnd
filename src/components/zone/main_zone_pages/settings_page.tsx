@@ -12,12 +12,12 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         flexDirection: "row",
     },
     settingsMenu: {
-        width: "33.3%",
-        backgroundColor: theme.palette.primary.dark
+        width: "33.4%",
+        backgroundColor: theme.palette.secondary.main
     },
     settingsOptions: {
         width: "66.6%",
-        backgroundColor: theme.palette.secondary.main
+        backgroundColor: theme.palette.secondary.light
     }
 })));
 
@@ -31,7 +31,7 @@ export function SettingsPage({ user, onLogout }: SettingsPageProps): JSX.Element
 
     return <div className={classes.settings}>
         <Paper square className={classes.settingsMenu}>
-
+        <Button onClick={onLogout}></Button>
         </Paper>
         <Paper square className={classes.settingsOptions}>
 
