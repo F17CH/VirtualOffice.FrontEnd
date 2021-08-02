@@ -20,7 +20,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         flexDirection: "column",
         alignItems: "center",
         "&:hover": {
-            backgroundColor: theme.palette.primary.main,
+            backgroundColor: theme.palette.secondary.main,
             cursor: "pointer"
         }
     },
@@ -28,9 +28,6 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         height: "50px",
         width: "40px",
         color: theme.palette.primary.main,
-        "&:hover": {
-            color: theme.palette.secondary.main,
-        }
     }
 })));
 

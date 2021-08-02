@@ -4,6 +4,7 @@ import { AppBar, Button, Divider, Grid, MenuItem, Paper, Select, TextField, Tool
 import { User } from "../../../types/user";
 import { SettingsGroup } from "../../setting/settings_group";
 import { SettingsDivider } from "../../setting/settings_divider";
+import Scrollbars from "react-custom-scrollbars";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     settings: {
@@ -17,9 +18,29 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         width: "300px",
         backgroundColor: theme.palette.secondary.main,
         display: "flex",
-        justifyContent: "flex-end",
+        justifyContent: "center",
         alignItems: "center",
+    },
+    settingsMenuZone: {
+        width: "200px",
+        backgroundColor: theme.palette.primary.main,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: "40px",
+        paddingBottom: "40px",
         paddingRight: "10px"
+    },
+    scroll: {
+        flexGrow: 1,
+    },
+    scrollInner: {
+        flexGrow: 1,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: "30px",
+        paddingBottom: "30px"
     },
     settingsOptions: {
         flexGrow: 1,
@@ -38,20 +59,29 @@ export function SettingsPage({ user, onLogout }: SettingsPageProps): JSX.Element
 
     return <div className={classes.settings}>
         <Paper square className={classes.settingsMenu}>
-            <div>
-                <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Logout!", onLogout], ["test2", null]]} />
-                <SettingsDivider />
-                <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Logout!", onLogout], ["test2", null]]} />
-                <SettingsDivider />
-                <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Logout!", onLogout], ["test2", null]]} />
-                <SettingsDivider />
-                <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Logout!", onLogout], ["test2", null]]} />
-                <SettingsDivider />
-                <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Logout!", onLogout], ["test2", null]]} />
-                <SettingsDivider />
-                <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Logout!", onLogout], ["test2", null]]} />
-            </div>
-
+            <Scrollbars className={classes.scroll}>
+                <div className={classes.scrollInner}>
+                    <Paper square className={classes.settingsMenuZone} >
+                        <div>
+                            <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Test 1", null], ["Test 2", null], ["Test 3", null]]} />
+                            <SettingsDivider />
+                            <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Test 1", null], ["Test 2", null], ["Test 3", null]]} />
+                            <SettingsDivider />
+                            <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Test 1", null], ["Test 2", null], ["Test 3", null]]} />
+                            <SettingsDivider />
+                            <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Test 1", null], ["Test 2", null], ["Test 3", null]]} />
+                            <SettingsDivider />
+                            <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Test 1", null], ["Test 2", null], ["Test 3", null]]} />
+                            <SettingsDivider />
+                            <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Test 1", null], ["Test 2", null], ["Test 3", null]]} />
+                            <SettingsDivider />
+                            <SettingsGroup groupTitle="PlaceHolder" groupItems={[["Test 1", null], ["Test 2", null], ["Test 3", null]]} />
+                            <SettingsDivider />
+                            <SettingsGroup groupTitle="" noTitle alertText groupItems={[["Log Out", onLogout]]} />
+                        </div>
+                    </Paper>
+                </div>
+            </Scrollbars>
             {/* <Button onClick={onLogout}></Button> */}
         </Paper>
         <Paper square className={classes.settingsOptions}>

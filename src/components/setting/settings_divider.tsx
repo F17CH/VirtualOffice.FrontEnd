@@ -9,7 +9,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
     divider: {
         zIndex: 100,
-        borderColor: theme.palette.primary.dark,
+        borderColor: theme.palette.secondary.dark,
     }
 })));
 

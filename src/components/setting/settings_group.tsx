@@ -12,35 +12,40 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
     title: {
         fontWeight: "bold",
-        color: theme.palette.primary.main,
-        paddingLeft: "5px"
+        color: theme.palette.secondary.main,
+        paddingLeft: "5px",
+        userSelect: "none"
     },
     itemPaper: {
         paddingLeft: "5px",
         cursor: "pointer",
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.primary.main,
     },
     itemPaperHover: {
         paddingLeft: "5px",
         cursor: "pointer",
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.light,
     },
     itemText: {
-        color: theme.palette.primary.main
-    },
-    itemTextHover: {
         color: theme.palette.secondary.main
+    },
+    itemTextAlert: {
+        color: theme.palette.error.main
     }
 })));
 
-export type SettingsGroupProps = {
+export interface SettingsGroupProps {
     groupTitle: string;
     groupItems: [string, () => void][];
+    noTitle?: boolean;
+    alertText?: boolean;
 }
 
 export function SettingsGroup({
     groupTitle,
-    groupItems
+    groupItems,
+    noTitle,
+    alertText
 }: SettingsGroupProps): JSX.Element {
     const classes = useStyles();
     const [itemHover, setItemHover] = useState<boolean[]>(Array<boolean>(groupItems.length));
@@ -62,10 +67,15 @@ export function SettingsGroup({
 
     return (
         <div className={classes.group}>
-            <Typography className={classes.title} variant="body1">{groupTitle.toUpperCase()}</Typography>
+            {noTitle ? (
+                <>
+                </>
+            ) : (
+                <Typography className={classes.title} variant="body1">{groupTitle.toUpperCase()}</Typography>
+            )}
             {groupItems.map((item, index) => (
-                <Paper elevation={0} className={itemHover[index] ? classes.itemPaperHover : classes.itemPaper} square onMouseOver={() => hover(index)} onMouseOut={() => noHover(index)} onClick={item[1]} >
-                    <Typography className={itemHover[index] ? classes.itemTextHover : classes.itemText} variant="body1">{item[0]}</Typography>
+                <Paper key={index} elevation={0} className={itemHover[index] ? classes.itemPaperHover : classes.itemPaper} square onMouseOver={() => hover(index)} onMouseOut={() => noHover(index)} onClick={item[1]} >
+                    <Typography key={index} className={alertText ? classes.itemTextAlert : classes.itemText} variant="body1">{item[0]}</Typography>
                 </ Paper>
             ))}
         </div>

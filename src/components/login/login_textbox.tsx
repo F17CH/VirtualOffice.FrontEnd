@@ -16,7 +16,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
     upperText: {
         fontWeight: 500,
-        color: "white",
+        color: theme.palette.secondary.main,
         paddingBottom: "10px"
     },
     iconPaper: {
@@ -30,14 +30,14 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     icon: {
         height: "25px",
         width: "25px",
-        color: "white",
+        color: theme.palette.secondary.main,
     },
     textBox: {
         display: "flex",
         justifyContent: "center",
         flexDirection: "column",
         flexGrow: 1,
-        backgroundColor: "white",
+        backgroundColor: "#d3d3d3",
     },
     textBoxText: {
         paddingLeft: "10px",
@@ -70,7 +70,7 @@ export function LoginTextBox({
     return <div className={className}>
         <Typography className={classes.upperText} variant="body2">{text.toUpperCase()}</Typography>
         <div className={classes.inner}>
-            <Paper square className={classes.iconPaper}>
+            <Paper elevation={0} square className={classes.iconPaper}>
                 <Icon className={classes.icon} />
             </Paper>
             <TextField className={classes.textBox} value={value} onChange={onChange} type={password ? "password" : ""} InputProps={{ classes: { input: classes.textBoxText }, disableUnderline: true, } } label={""}></TextField>

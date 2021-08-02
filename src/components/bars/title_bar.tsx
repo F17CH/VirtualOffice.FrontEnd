@@ -37,7 +37,7 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
     },
     closeButtonHover: {
         background: theme.palette.error.main,
-        stroke: theme.palette.secondary.main,
+        stroke: theme.palette.primary.main,
         cursor: "pointer",
         WebkitAppRegion: "none",
     },
@@ -46,8 +46,8 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         WebkitAppRegion: "none",
     },
     maxButtonHover: {
-        background: theme.palette.primary.main,
-        stroke: theme.palette.secondary.main,
+        background: theme.palette.secondary.main,
+        stroke: theme.palette.primary.main,
         cursor: "pointer",
         WebkitAppRegion: "none",
     },
@@ -56,8 +56,8 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
         WebkitAppRegion: "none",
     },
     minButtonHover: {
-        background: theme.palette.primary.main,
-        stroke: theme.palette.secondary.main,
+        background: theme.palette.secondary.main,
+        stroke: theme.palette.primary.main,
         cursor: "pointer",
         WebkitAppRegion: "none",
     }

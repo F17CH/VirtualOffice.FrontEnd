@@ -20,7 +20,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     loginText: {
         paddingTop: "80px",
         fontWeight: 600,
-        color: "white",
+        color: theme.palette.secondary.main,
         paddingBottom: "60px"
     },
     loginTextBox: {
@@ -29,7 +29,7 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
     loginButton: {
         width: "300px",
-        color: "white",
+        color: theme.palette.secondary.main,
         backgroundColor: theme.palette.primary.dark,
         borderRadius: "0px",
         '&:hover': {
@@ -38,12 +38,12 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
     loginMessage: {
         fontWeight: 400,
-        color: "white",
+        color: theme.palette.secondary.main,
         paddingTop: "30px"
     },
     registerMessage: {
         fontWeight: 400,
-        color: "#bdbdbd",
+        color: theme.palette.secondary.light,
         paddingTop: "20px",
         cursor: "pointer"
     },

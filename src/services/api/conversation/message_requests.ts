@@ -4,7 +4,7 @@ import { LoginCredentials } from "../../../types/login_credentials";
 import { LoginResult } from "../../../types/login_result";
 import { User } from "../../../types/user";
 import { setUserToken } from "../../user_token_manager";
-import { getResponseBody } from "../api_utils";
+import { getDataResponseBody } from "../api_utils";
 import { nonAuthorizedRequest } from "../non_authorized_request";
 import { SignInResponse } from "../user/types/sign_in_response";
 import { userAuthorizedRequest } from "../user_authorized_request";
@@ -23,7 +23,7 @@ export async function postMessageCreate(conversationId : string, message: Messag
 
         switch (response.status) {
             case 200: {
-                var message: Message = await getResponseBody<Message>(response);
+                var message: Message = await getDataResponseBody<Message>(response);
 
                 result = message;
                 break;
