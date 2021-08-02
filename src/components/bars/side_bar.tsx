@@ -38,14 +38,21 @@ const useStyles = (makeStyles<Theme, StyleProps>(theme => createStyles({
 })));
 
 type SideBarProps = {
-    //onSettingsClick: () => void;
     sideBarWidth: string;
     underBarSize: string;
+    onOfficeViewClick: () => void;
+    onConversationsClick: () => void;
+    onGroupsClick: () => void;
+    onSettingsClick: () => void;
 }
 
 export function SideBar({
     sideBarWidth,
-    underBarSize
+    underBarSize,
+    onOfficeViewClick,
+    onConversationsClick,
+    onGroupsClick,
+    onSettingsClick
 }: SideBarProps): JSX.Element {
     const styleProps: StyleProps = { sideBarWidthStyle: sideBarWidth, underBarSizeStyle: underBarSize };
     const classes = useStyles(styleProps);
@@ -54,12 +61,12 @@ export function SideBar({
         <div className={classes.sideBarDiv}>
             <Paper className={classes.sideBarMainPaper} square>
                 <div>
-                    <SideBarButton icon={Business} title={"Office View"} />
-                    <SideBarButton icon={Person} title={"Conversations"} />
-                    <SideBarButton icon={People} title={"Groups"} />
+                    <SideBarButton icon={Business} title={"Office View"} onClick={onOfficeViewClick} />
+                    <SideBarButton icon={Person} title={"Conversations"} onClick={onConversationsClick} />
+                    <SideBarButton icon={People} title={"Groups"} onClick={onGroupsClick} />
                 </div>
                 <div>
-                    <SideBarButton icon={Settings} title={"Settings"} />
+                    <SideBarButton icon={Settings} title={"Settings"} onClick={onSettingsClick} />
                 </div>
             </Paper>
             <Paper className={classes.underBarPaper} square>

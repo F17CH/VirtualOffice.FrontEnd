@@ -1,6 +1,6 @@
 import { Button, createStyles, Grid, makeStyles, Paper, Theme } from "@material-ui/core";
 import { Settings } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { Component, ReactElement, useEffect, useState } from "react";
 import { SideBar } from "../bars/side_bar";
 import { UnderBar } from "../bars/under_bar";
 import { ConversationPanel } from "../panels/conversation_panel";
@@ -19,6 +19,7 @@ import { LoginCredentials } from "../../types/login_credentials";
 import { SessionUser } from "../../types/session_user";
 import { User } from "../../types/user";
 import { SettingsPage } from "./main_zone_pages/settings_page";
+import { ConversationsPage } from "./main_zone_pages/conversations_page";
 
 type StyleProps =
     {
@@ -60,6 +61,9 @@ export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, 
     const [currentUser, setCurrentUser] = useState<User>(null);
     const [users, setUsers] = useState<{ [userId: string]: User }>({});
     const [selectedUser, setSelectedUser] = useState<User>(null);
+
+    const [pageDisplayIndex, setPageDisplayIndex] = useState<number>(0);
+
 
     const [associations, setAssociations] = useState<{ [associationId: string]: Association }>({});
     const [selectedAssociation, setSelectedAssociation] = useState<Association>(null);
@@ -190,13 +194,35 @@ export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, 
         }
     }
 
+    function getCurrentPage(): ReactElement {
+        let component: ReactElement = null;
+        switch (pageDisplayIndex) {
+            case 1:
+                component = <></>;
+                break;
+            case 2:
+                component = <ConversationsPage user={currentUser} />;
+                break;
+            case 3:
+                component = <></>;
+                break;
+            case 99:
+                component = <SettingsPage user={currentUser} onLogout={onLogout} />;
+                break;
+            default:
+                component = <></>;
+        }
+
+        return component;
+    }
+
     return (
         <div className={classes.mainBody}>
-            <SideBar sideBarWidth={sideBarWidth} underBarSize={underBarSize} />
+            <SideBar sideBarWidth={sideBarWidth} underBarSize={underBarSize} onOfficeViewClick={() => setPageDisplayIndex(1)} onConversationsClick={() => setPageDisplayIndex(2)} onGroupsClick={() => setPageDisplayIndex(3)} onSettingsClick={() => setPageDisplayIndex(99)} />
             <div className={classes.subBody}>
                 <UnderBar underBarHeight={underBarSize} />
                 <div className={classes.pageBody}>
-                    <SettingsPage user={currentUser} onLogout={onLogout} />
+                    {getCurrentPage()}
                 </div>
             </div>
 

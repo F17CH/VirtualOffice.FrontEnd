@@ -24,13 +24,13 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.secondary.main,
         width: "40px"
     },
     icon: {
         height: "25px",
         width: "25px",
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
     },
     textBox: {
         display: "flex",

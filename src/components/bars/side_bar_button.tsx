@@ -5,13 +5,13 @@ import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
 const SideBarTooltip = withStyles((theme: Theme) => ({
     tooltip: {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.secondary.light,
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      fontFamily: theme.typography.fontFamily
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.secondary.light,
+        maxWidth: 220,
+        fontSize: theme.typography.pxToRem(12),
+        fontFamily: theme.typography.fontFamily
     },
-  }))(Tooltip);
+}))(Tooltip);
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     sidebarButtonSquare: {
@@ -35,18 +35,20 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
 type SideBarButtonProps = {
     icon: OverridableComponent<SvgIconTypeMap>;
     title: string;
+    onClick: () => void;
 }
 
 export function SideBarButton({
     icon,
-    title
+    title,
+    onClick
 }: SideBarButtonProps): JSX.Element {
     const classes = useStyles();
 
     const Icon = icon;
 
     return (
-        <Paper square className={classes.sidebarButtonSquare} elevation={0} >
+        <Paper square className={classes.sidebarButtonSquare} elevation={0} onClick={onClick} >
             <SideBarTooltip title={title.toUpperCase()} aria-label={title} placement="right">
                 <Icon className={classes.icon} />
             </SideBarTooltip>

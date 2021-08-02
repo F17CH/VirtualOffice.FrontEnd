@@ -29,11 +29,11 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     },
     loginButton: {
         width: "300px",
-        color: theme.palette.secondary.main,
-        backgroundColor: theme.palette.primary.dark,
+        color: theme.palette.primary.main,
+        backgroundColor: theme.palette.secondary.main,
         borderRadius: "0px",
         '&:hover': {
-            backgroundColor: theme.palette.primary.dark,
+            backgroundColor: theme.palette.secondary.light,
         }
     },
     loginMessage: {
