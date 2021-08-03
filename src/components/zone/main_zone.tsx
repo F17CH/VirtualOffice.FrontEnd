@@ -201,7 +201,7 @@ export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, 
                 component = <></>;
                 break;
             case 2:
-                component = <ConversationsPage user={currentUser} />;
+                component = <ConversationsPage currentUser={currentUser} users={users} conversations={individualConversations} />;
                 break;
             case 3:
                 component = <></>;
