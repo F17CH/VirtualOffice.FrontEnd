@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Button, Grid, Paper, TextField, Toolbar, Typography } from "@material-ui/core";
-import { User } from "../../types/user";
+import { getFullName, User } from "../../types/user";
 import { LoginCredentials } from "../../types/login_credentials";
 import { postConversationCreate } from "../../services/api/conversation/conversation_requests";
 import { ConversationCreateRequest } from "../../services/api/conversation/types/conversation_create_request";
@@ -59,7 +59,7 @@ export function ConversationMenuBox({ conversation, user, onClick }: Conversatio
         <div className={classes.conversationMenuItem}>
             <Paper className={itemHover ? classes.conversationMenuBoxHover : classes.conversationMenuBox} square elevation={0} onClick={onClick} onMouseOver={() => setItemHover(true)} onMouseOut={() => setItemHover(false)} >
                 <AccountCircleIcon className={classes.icon} />
-                <Typography className={classes.nameText}> {user.firstName + " " + user.lastName} </Typography>
+                <Typography className={classes.nameText}> {conversation.individual ? getFullName(conversation.individualRecipientUser) : "Group Conversation"} </Typography>
             </Paper>
         </div>
     )

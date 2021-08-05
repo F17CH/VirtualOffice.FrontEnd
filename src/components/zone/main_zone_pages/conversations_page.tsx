@@ -8,6 +8,7 @@ import Scrollbars from "react-custom-scrollbars";
 import { Conversation } from "../../../types/conversation/conversation";
 import { ConversationMenuBox } from "../../conversation/conversation_menu_box";
 import { ConversationMenuBoxDivider } from "../../conversation/conversation_menu_box_divider";
+import { ConversationContainer } from "../../conversation/conversation_container/conversation_container";
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
     conversationPage: {
@@ -25,9 +26,14 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         flexDirection: "column",
         alignItems: "center",
     },
+    verticalLine: {
+        margin: 0,
+        padding: 0,
+        borderWidth: "1px",
+        borderColor: theme.palette.secondary.dark,
+    },
     conversationPanel: {
         flexGrow: 1,
-        backgroundColor: theme.palette.secondary.light
     },
 })));
 
@@ -39,18 +45,20 @@ export type ConversationsPageProps = {
 
 export function ConversationsPage({ currentUser, users, conversations }: ConversationsPageProps): JSX.Element {
     const classes = useStyles();
+    const [selectedConversation, setSelectedConversation] = useState<Conversation>(null);
 
     return <div className={classes.conversationPage}>
         <Paper square className={classes.conversationsMenu}>
             {Object.keys(conversations).map(userId => (
-                <>
-                    <ConversationMenuBox conversation={conversations[userId]} user={users[userId]} onClick={null} />
+                <React.Fragment key={userId}>
+                    <ConversationMenuBox conversation={conversations[userId]} user={users[userId]} onClick={() => setSelectedConversation(conversations[userId])} />
                     <ConversationMenuBoxDivider />
-                </>
+                </React.Fragment>
             ))}
         </Paper>
-        <Paper square className={classes.conversationPanel}>
-
-        </Paper>
+        <hr  className={classes.verticalLine} />
+        <div className={classes.conversationPanel}>
+            <ConversationContainer conversation={selectedConversation} currentUser={currentUser} />
+        </div>
     </div>
 }

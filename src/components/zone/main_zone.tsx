@@ -130,6 +130,7 @@ export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, 
                     if (user.id != currentUser.id) {
                         recipientUser = user;
                         newUsers.push(user);
+                        conversation.individualRecipientUser = recipientUser;
                     }
                 });
                 if (recipientUser) {
