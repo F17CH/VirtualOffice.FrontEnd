@@ -21,7 +21,8 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
         paddingTop: "80px",
         fontWeight: 600,
         color: theme.palette.secondary.main,
-        paddingBottom: "60px"
+        paddingBottom: "60px",
+        userSelect: "none",
     },
     loginTextBox: {
         width: "300px",
@@ -39,13 +40,15 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     loginMessage: {
         fontWeight: 400,
         color: theme.palette.secondary.main,
-        paddingTop: "30px"
+        paddingTop: "30px",
+        userSelect: "none"
     },
     registerMessage: {
         fontWeight: 400,
         color: theme.palette.secondary.light,
         paddingTop: "20px",
-        cursor: "pointer"
+        cursor: "pointer",
+        userSelect: "none"
     },
     loadingDiv: {
         display: "flex",

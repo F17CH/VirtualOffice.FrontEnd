@@ -17,7 +17,8 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     upperText: {
         fontWeight: 500,
         color: theme.palette.secondary.main,
-        paddingBottom: "10px"
+        paddingBottom: "10px",
+        userSelect: "none",
     },
     iconPaper: {
         display: "flex",

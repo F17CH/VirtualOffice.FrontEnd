@@ -60,7 +60,8 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     title: {
         fontWeight: 600,
         color: theme.palette.secondary.light,
-        justifySelf: "center"
+        justifySelf: "center",
+        userSelect: "none",
     },
     loginTextBox: {
         width: "300px",
@@ -78,7 +79,8 @@ const useStyles = (makeStyles<Theme>(theme => createStyles({
     registerMessage: {
         fontWeight: 400,
         color: theme.palette.secondary.light,
-        padding: "30px"
+        padding: "30px",
+        userSelect: "none"
     },
     credentialsDiv: {
 
