@@ -13,7 +13,6 @@ import { Socket } from "phoenix";
 import { initSocket } from "../../services/channel/socket_handler";
 import { postMessageCreate } from "../../services/api/conversation/message_requests";
 import { userCacheloadUser } from "../../services/users/users_cache";
-import { ConversationPackage } from "../../types/conversation/conversation_package";
 import { UserSelectionBox } from "../group/user_selection_box";
 import { UserSelectionPanel } from "./sub_panels/user_selection_panel";
 import { Association } from "../../types/group/association";

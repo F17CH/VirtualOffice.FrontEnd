@@ -12,7 +12,6 @@ import { initSocket } from "../../services/channel/socket_handler";
 import { newUserChannel } from "../../services/channel/user_channel_handler";
 import { userCacheCurrentUser, userCacheloadUser } from "../../services/users/users_cache";
 import { Conversation } from "../../types/conversation/conversation";
-import { ConversationPackage } from "../../types/conversation/conversation_package";
 import { Message } from "../../types/conversation/message";
 import { Association } from "../../types/group/association";
 import { LoginCredentials } from "../../types/login_credentials";
@@ -171,9 +170,9 @@ export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, 
     }
 
     function onNewMessage(currentConversation: Conversation, newMessage: Message): void {
-        setConversations((prevState) => {
+        setIndividualConversations((prevState) => {
             currentConversation.messages.push(newMessage);
-            prevState[currentConversation.id] = currentConversation;
+            prevState[currentConversation.individualRecipientUser.id] = currentConversation;
             return { ...prevState }
         });
     }
@@ -202,7 +201,7 @@ export function MainZone({ sessionUser, onLogout, titleBarHeight, underBarSize, 
                 component = <></>;
                 break;
             case 2:
-                component = <ConversationsPage currentUser={currentUser} users={users} conversations={individualConversations} />;
+                component = <ConversationsPage currentUser={currentUser} users={users} conversations={individualConversations} onNewMessage={onNewMessage} />;
                 break;
             case 3:
                 component = <></>;

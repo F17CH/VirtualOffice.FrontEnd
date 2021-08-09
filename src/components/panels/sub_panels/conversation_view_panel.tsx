@@ -9,7 +9,6 @@ import { MessageRow } from "../../conversation/message_row";
 import { User } from "../../../types/user";
 import { Message } from "../../../types/conversation/message";
 import { userCacheloadUser } from "../../../services/users/users_cache";
-import { ConversationPackage } from "../../../types/conversation/conversation_package";
 
 
 const useStyles = (makeStyles<Theme>(theme => createStyles({
